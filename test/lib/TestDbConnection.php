@@ -8,13 +8,18 @@ class TestDbConnection implements DbConnectionInterface
     public $returnValues = [];
     private $queryCount = -1;
 
-    public function query($sql, $bindings = [])
+    public function select($sql, $bindings = [])
     {
         $this->log[] = (string)$sql;
         $this->queryCount++;
         if (isset($this->returnValues[$this->queryCount])) {
             return $this->returnValues[$this->queryCount];
         }
+    }
+
+    public function execute($sql, $bindings = [])
+    {
+        $this->log[] = (string)$sql;
     }
 
     public function beginTransaction()

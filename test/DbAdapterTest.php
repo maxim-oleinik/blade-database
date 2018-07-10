@@ -165,7 +165,7 @@ class DbAdapterTest extends \PHPUnit_Framework_TestCase
 
         $sql = 'select *';
         $result = $db->transaction(function() use ($sql, $con) {
-            $con->query($sql);
+            $con->select($sql);
         });
 
         $this->assertEquals(['begin', $sql, 'commit'], $con->log);
@@ -184,7 +184,7 @@ class DbAdapterTest extends \PHPUnit_Framework_TestCase
 
         try {
             $result = $db->transaction(function() use ($sql, $con) {
-                $con->query($sql);
+                $con->select($sql);
                 throw new \RuntimeException('sql error');
             });
             $this->fail('Excepted exception');

@@ -37,11 +37,11 @@ class DbAdapter
      *
      * @param string $query
      * @param array $bindings
-     * @return bool
+     * @return bool|int
      */
-    public function execute($query, array $bindings = []): bool
+    public function execute($query, array $bindings = [])
     {
-        return $this->getConnection()->query($query, $bindings);
+        return $this->getConnection()->execute($query, $bindings);
     }
 
 
@@ -54,7 +54,7 @@ class DbAdapter
      */
     public function selectList($query, array $bindings = []): array
     {
-        if ($rows = $this->getConnection()->query((string)$query, $bindings)) {
+        if ($rows = $this->getConnection()->select((string)$query, $bindings)) {
             return $rows;
         }
 
@@ -71,7 +71,7 @@ class DbAdapter
      */
     public function selectRow($query, array $bindings = []): array
     {
-        if ($rows = $this->getConnection()->query($query, $bindings)) {
+        if ($rows = $this->getConnection()->select($query, $bindings)) {
             foreach ($rows as $row) {
                 return (array) $row;
             }
@@ -90,7 +90,7 @@ class DbAdapter
     public function selectColumn($query, array $bindings = []): array
     {
         $result = [];
-        if ($rows = $this->getConnection()->query($query, $bindings)) {
+        if ($rows = $this->getConnection()->select($query, $bindings)) {
             foreach ($rows as $row) {
                 $row = (array) $row;
                 $result[] = current($row);

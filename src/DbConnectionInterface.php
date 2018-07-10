@@ -6,6 +6,15 @@
 interface DbConnectionInterface
 {
     /**
+     * Выполнить запрос
+     *
+     * @param string $sql
+     * @param array $bindings
+     * @return bool|int
+     */
+    public function execute($sql, $bindings = []);
+
+    /**
      * Выполнить запрос и вернуть структуру доступную для foreach
      * или bool, если запрос не предполагает возврат значений
      *
@@ -13,7 +22,7 @@ interface DbConnectionInterface
      * @param array $bindings
      * @return bool|array
      */
-    public function query($sql, $bindings = []);
+    public function select($sql, $bindings = []);
 
     /**
      * Start a new database transaction.
