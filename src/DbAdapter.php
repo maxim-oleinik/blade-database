@@ -1,5 +1,8 @@
 <?php namespace Blade\Database;
 
+/**
+ * @see \Test\BladeDatabase\DbAdapterTest
+ */
 class DbAdapter
 {
     /**

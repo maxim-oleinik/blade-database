@@ -3,6 +3,9 @@
 use Blade\Database\DbAdapter;
 use Blade\Database\Test\TestDbConnection;
 
+/**
+ * @see \Blade\Database\DbAdapter
+ */
 class DbAdapterTest extends \PHPUnit_Framework_TestCase
 {
     /**
