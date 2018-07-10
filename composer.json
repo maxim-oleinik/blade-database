@@ -8,18 +8,19 @@
     "email": "maxim.oleinik@gmail.com"
   }],
   "require": {
+    "php": ">=7.0",
   },
   "require-dev": {
     "phpunit/phpunit": "5.*"
   },
   "autoload": {
     "psr-4": {
-      "Blade\\Database\\": "src/"
+      "Blade\\Database\\": "src"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Test\\BladeDatabase\\": "test/lib"
+      "Blade\\Database\\Test\\": "test/lib"
     }
   }
 }
