@@ -1,0 +1,25 @@
+{
+  "name": "blade/database",
+  "type": "library",
+  "description": "PHP Database interface library",
+  "license": "MIT",
+  "authors": [{
+    "name": "Maxim Oleinik",
+    "email": "maxim.oleinik@gmail.com"
+  }],
+  "require": {
+  },
+  "require-dev": {
+    "phpunit/phpunit": "5.*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Blade\\Database\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Test\\BladeDatabase\\": "test/lib"
+    }
+  }
+}
