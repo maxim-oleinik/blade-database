@@ -5,12 +5,16 @@ use Blade\Database\DbConnectionInterface;
 class TestDbConnection implements DbConnectionInterface
 {
     public $log = [];
-    public $returnValue;
+    public $returnValues = [];
+    private $queryCount = -1;
 
     public function query($sql, $bindings = [])
     {
-        $this->log[] = $sql;
-        return $this->returnValue;
+        $this->log[] = (string)$sql;
+        $this->queryCount++;
+        if (isset($this->returnValues[$this->queryCount])) {
+            return $this->returnValues[$this->queryCount];
+        }
     }
 
     public function beginTransaction()

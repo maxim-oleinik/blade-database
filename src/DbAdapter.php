@@ -1,5 +1,7 @@
 <?php namespace Blade\Database;
 
+use Blade\Database\Sql\SqlBuilder;
+
 /**
  * @see \Test\BladeDatabase\DbAdapterTest
  */
@@ -156,6 +158,32 @@ class DbAdapter
         } catch (\Exception $e) {
             $con->rollBack();
             throw $e;
+        }
+    }
+
+
+    /**
+     * Разбить выборку на части
+     *
+     * @param int        $pageSize
+     * @param SqlBuilder $sql
+     * @param callable   $handler
+     */
+    public function chunk($pageSize, SqlBuilder $sql, callable $handler)
+    {
+        $rowsCount = $this->selectValue($sql->copy()->count());
+
+        if ($rowsCount) {
+            $itemsLeft = $rowsCount;
+            $page   = 1;
+            $offset = 0;
+            do {
+                $pageSql = $sql->copy()->limit($pageSize, $offset);
+                $page++;
+                $offset = ($page - 1) * $pageSize;
+                $itemsLeft -= $pageSize;
+                $handler($this->selectList($pageSql));
+            } while ($itemsLeft > 0);
         }
     }
 }
