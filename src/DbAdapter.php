@@ -54,11 +54,17 @@ class DbAdapter
      */
     public function selectList($query, array $bindings = []): array
     {
+        $result = [];
         if ($rows = $this->getConnection()->select((string)$query, $bindings)) {
-            return $rows;
+            if (!is_array($rows) && !$rows instanceof \Traversable) {
+                throw new \RuntimeException(__METHOD__.": Expected ".get_class($this->getConnection())."->select({$query}) will return ARRAY or Traversable");
+            }
+            foreach ($rows as $row) {
+                $result[] = $row;
+            }
         }
 
-        return [];
+        return $result;
     }
 
 
