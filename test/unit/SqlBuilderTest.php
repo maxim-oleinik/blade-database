@@ -1,4 +1,4 @@
-<?php namespace Test\BladeDatabase;
+<?php namespace Test\Blade\Database;
 
 use Blade\Database\Sql\SqlBuilder;
 

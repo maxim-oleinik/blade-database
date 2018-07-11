@@ -3,7 +3,9 @@
 use Blade\Database\Sql\SqlBuilder;
 
 /**
- * @see \Test\BladeDatabase\DbAdapterTest
+ * @see \Test\Blade\Database\DbAdapter\SelectTest
+ * @see \Test\Blade\Database\DbAdapter\TransactionTest
+ * @see \Test\Blade\Database\DbAdapter\ChunkTest
  */
 class DbAdapter
 {
