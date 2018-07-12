@@ -6,13 +6,14 @@
 interface DbConnectionInterface
 {
     /**
-     * Выполнить запрос
+     * Выполнить запрос и вернуть кол-во затронутых строк
      *
      * @param string $sql
      * @param array $bindings
-     * @return bool|int
+     *
+     * @return int
      */
-    public function execute($sql, $bindings = []);
+    public function execute($sql, $bindings = []): int;
 
     /**
      * Выполнить запрос и вернуть структуру доступную для foreach

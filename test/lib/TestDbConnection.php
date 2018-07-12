@@ -17,9 +17,10 @@ class TestDbConnection implements DbConnectionInterface
         }
     }
 
-    public function execute($sql, $bindings = [])
+    public function execute($sql, $bindings = []):int
     {
         $this->log[] = (string)$sql;
+        return 1;
     }
 
     public function beginTransaction()
