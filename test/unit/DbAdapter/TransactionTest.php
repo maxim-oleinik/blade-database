@@ -18,7 +18,7 @@ class TransactionTest extends \PHPUnit_Framework_TestCase
 
         $sql = 'select *';
         $result = $db->transaction(function() use ($sql, $con) {
-            $con->select($sql);
+            $con->execute($sql);
         });
 
         $this->assertEquals(['begin', $sql, 'commit'], $con->log);
@@ -37,7 +37,7 @@ class TransactionTest extends \PHPUnit_Framework_TestCase
 
         try {
             $result = $db->transaction(function() use ($sql, $con) {
-                $con->select($sql);
+                $con->execute($sql);
                 throw new \RuntimeException('sql error');
             });
             $this->fail('Excepted exception');

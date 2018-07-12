@@ -6,7 +6,8 @@
 interface DbConnectionInterface
 {
     /**
-     * Выполнить запрос и вернуть кол-во затронутых строк
+     * Выполнить запрос и вернуть кол-во затронутых строк.
+     * Реализовать собственную обработку ошибок выполнения запроса
      *
      * @param string $sql
      * @param array $bindings
@@ -16,14 +17,16 @@ interface DbConnectionInterface
     public function execute($sql, $bindings = []): int;
 
     /**
-     * Выполнить запрос и вернуть структуру доступную для foreach
-     * или bool, если запрос не предполагает возврат значений
+     * Выполнить SQL и для каждой строки выборки вызвать указанную callback-функцию
+     *     callback принимает строку ТОЛЬКО как МАССИВ
+     * Реализовать собственную обработку ошибок выполнения запроса
      *
-     * @param string $sql
-     * @param array $bindings
-     * @return bool|array
+     * @param string   $sql
+     * @param array    $bindings
+     * @param callable $callback
      */
-    public function select($sql, $bindings = []);
+    public function each($sql, $bindings = [], callable $callback);
+
 
     /**
      * Start a new database transaction.

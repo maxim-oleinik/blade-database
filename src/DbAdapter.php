@@ -104,7 +104,7 @@ class DbAdapter
      * @param array $bindings
      * @return bool|int
      */
-    public function execute($query, array $bindings = [])
+    public function execute($query, $bindings = [])
     {
         return $this->getConnection()->execute($query, $bindings);
     }
@@ -117,22 +117,17 @@ class DbAdapter
      * @param array  $bindings
      * @return array
      */
-    public function selectList($query, array $bindings = []): array
+    public function selectList($query, $bindings = []): array
     {
         $result = [];
-        if ($rows = $this->getConnection()->select((string)$query, $bindings)) {
-            if (!is_array($rows) && !$rows instanceof \Traversable) {
-                throw new \RuntimeException(__METHOD__.": Expected ".get_class($this->getConnection())."->select({$query}) will return ARRAY or Traversable");
-            }
-            foreach ($rows as $row) {
-                $result[] = $row;
-            }
-        }
-        unset($rows);
+
+        $this->getConnection()->each((string)$query, $bindings, function ($row) use (&$result) {
+            $this->_checkCallbackArguments($row);
+            $result[] = $row;
+        });
 
         return $result;
     }
-
 
     /**
      * Вернуть ОДНУ строку
@@ -141,11 +136,11 @@ class DbAdapter
      * @param array  $bindings
      * @return array
      */
-    public function selectRow($query, array $bindings = []): array
+    public function selectRow($query, $bindings = []): array
     {
-        if ($rows = $this->getConnection()->select($query, $bindings)) {
+        if ($rows = $this->selectList($query, $bindings)) {
             foreach ($rows as $row) {
-                return (array) $row;
+                return $row;
             }
         }
 
@@ -159,19 +154,17 @@ class DbAdapter
      * @param array  $bindings
      * @return array
      */
-    public function selectColumn($query, array $bindings = []): array
+    public function selectColumn($query, $bindings = []): array
     {
         $result = [];
-        if ($rows = $this->getConnection()->select($query, $bindings)) {
-            foreach ($rows as $row) {
-                $row = (array) $row;
-                $result[] = current($row);
-            }
-        }
+
+        $this->getConnection()->each((string)$query, $bindings, function ($row) use (&$result) {
+            $this->_checkCallbackArguments($row);
+            $result[] = current($row);
+        });
 
         return $result;
     }
-
 
     /**
      * Вернуть значение ОДНОЙ ЯЧЕЙКИ
@@ -180,14 +173,13 @@ class DbAdapter
      * @param array  $bindings
      * @return string|false - если ничего не найдено
      */
-    public function selectValue($query, array $bindings = [])
+    public function selectValue($query, $bindings = [])
     {
         if ($row = $this->selectRow($query, $bindings)) {
             return current($row);
         }
         return false;
     }
-
 
     /**
      * Key-Value
@@ -196,20 +188,31 @@ class DbAdapter
      * @param array  $bindings
      * @return array
      */
-    public function selectKeyValue($query, array $bindings = []): array
+    public function selectKeyValue($query, $bindings = []): array
     {
         $result = [];
-        foreach ($this->selectList($query, $bindings) as $row) {
-            $row = (array) $row;
+
+        $this->getConnection()->each((string)$query, $bindings, function ($row) use (&$result) {
+            $this->_checkCallbackArguments($row);
             if (count($row) != 2) {
                 throw new \RuntimeException(__METHOD__ . ": Expected 2 columns, got " . var_export($row, true));
             }
-
-            $row = array_values($row);
-            $result[$row[0]] = $row[1];
-        }
+            $result[current($row)] = next($row);
+        });
 
         return $result;
+    }
+
+    /**
+     * Выкинуть исключение, если входящее значение не массив
+     *
+     * @param mixed $row
+     */
+    private function _checkCallbackArguments($row)
+    {
+        if (!is_array($row)) {
+            throw new \InvalidArgumentException(__METHOD__ . ": Expected " . get_class($this->getConnection()) . "->each() runs callback with row as ARRAY");
+        }
     }
 
 

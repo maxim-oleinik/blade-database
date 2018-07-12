@@ -21,20 +21,21 @@ class PdoConnection extends \PDO implements DbConnectionInterface
     }
 
     /**
-     * Выполнить запрос и вернуть структуру доступную для foreach
-     * или bool, если запрос не предполагает возврат значений
+     * Выполнить SQL и для каждой строки выборки вызвать указанную callback-функцию
+     * callback принимает строку ТОЛЬКО как МАССИВ
      *
-     * @param string $sql
-     * @param array  $bindings
-     * @return array|bool|\PDOStatement
+     * @param string   $sql
+     * @param array    $bindings
+     * @param callable $callback
      */
-    public function select($sql, $bindings = [])
+    public function each($sql, $bindings = [], callable $callback)
     {
-        $result = $this->query($sql);
-        if (false === $result) {
+        if (!$statement = $this->query($sql)) {
             throw new \RuntimeException(var_export($this->errorInfo(), true) . PHP_EOL . $sql);
         }
 
-        return $result;
+        foreach ($statement as $row) {
+            $callback($row);
+        }
     }
 }
