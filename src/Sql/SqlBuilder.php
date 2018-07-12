@@ -313,7 +313,7 @@ class SqlBuilder
      */
     public function andWhere($cond)
     {
-        return $this->_where(self::WHERE_AND, func_get_args());
+        return $this->where(self::WHERE_AND, func_get_args());
     }
 
     public function orWhere($cond)
@@ -321,7 +321,7 @@ class SqlBuilder
         if (!$this->where) {
             throw new \InvalidArgumentException(__METHOD__.": Invalid first OR condition");
         }
-        return $this->_where(self::WHERE_OR, func_get_args());
+        return $this->where(self::WHERE_OR, func_get_args());
     }
 
     /**
@@ -329,7 +329,7 @@ class SqlBuilder
      * @param array $args
      * @return $this
      */
-    private function _where($op, array $args)
+    protected function where($op, array $args)
     {
         $cond = $args[0];
         if ($cond instanceof SqlBuilder) {
@@ -377,28 +377,6 @@ class SqlBuilder
     {
         return $this->andWhereIn($field, $values, false);
     }
-
-
-    /**
-     * WHERE deleted_at IS NULL
-     *
-     * @return $this
-     */
-    public function andWhereNotDeleted()
-    {
-        return $this->andWhereDeleted(false);
-    }
-
-    /**
-     * @param bool $isDeleted
-     * @return $this
-     */
-    public function andWhereDeleted($isDeleted = true)
-    {
-        $not = $isDeleted ? ' NOT' : null;
-        return $this->_where(self::WHERE_AND, [$this->col('deleted_at') . " IS{$not} NULL"]);
-    }
-
 
     /**
      * ORDER BY

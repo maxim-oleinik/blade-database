@@ -84,17 +84,6 @@ class SqlBuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals("SELECT *\nFROM {$this->table}\nWHERE col NOT IN ('1', '2')", (string)$sql);
     }
 
-    public function testWhereNotDeleted()
-    {
-        $sql = $this->_sql();
-        $sql->andWhereNotDeleted();
-        $this->assertEquals("SELECT *\nFROM {$this->table}\nWHERE deleted_at IS NULL", (string)$sql);
-
-        $sql = $this->_sql();
-        $sql->andWhereDeleted(true);
-        $this->assertEquals("SELECT *\nFROM {$this->table}\nWHERE deleted_at IS NOT NULL", (string)$sql);
-    }
-
     public function testWhereSprintf()
     {
         $sql = $this->_sql();
