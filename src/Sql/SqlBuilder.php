@@ -265,10 +265,24 @@ class SqlBuilder
         return $this;
     }
 
+    /**
+     * @param string $fields
+     * @return $this
+     */
     public function count($fields = '*')
     {
-        return $this->select(sprintf('count(%s)', $fields))
-            ->orderBy(null);
+        $this->orderBy(null);
+
+        if ($this->groupBy) {
+            $alias = md5($this);
+            $sql = self::make($this->label);
+            $this->label = null;
+            $sql->from("({$this})", 't'.$alias)
+                ->select(sprintf('count(%s)', $fields));
+            return $sql;
+        }
+
+        return $this->select(sprintf('count(%s)', $fields));
     }
 
     /**

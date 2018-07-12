@@ -170,6 +170,25 @@ class SqlBuilderTest extends \PHPUnit_Framework_TestCase
             "LIMIT 10 OFFSET 2", (string)$sql);
     }
 
+    public function testCountWithGroupBy()
+    {
+        $sql = $this->_sql('label')
+            ->from('contacts')
+            ->select('status, count(*)')
+            ->groupBy('status')
+            ->having('1=1');
+        $alias = 't'.md5($sql);
+        $sql = $sql->orderBy('status')->count();
+
+        $this->assertEquals("/*label*/".PHP_EOL.
+            "SELECT count(*)".PHP_EOL
+            ."FROM (SELECT status, count(*)".PHP_EOL.
+            "FROM contacts".PHP_EOL.
+            "GROUP BY status".PHP_EOL.
+            "HAVING 1=1) AS {$alias}",
+            (string)$sql);
+    }
+
 
     /**
      * INSERT
