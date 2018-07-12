@@ -15,6 +15,11 @@ class DbAdapter
     private $connection;
 
     /**
+     * @var int - Счетчик вложенных транзакций
+     */
+    private $transactionCounter = 0;
+
+    /**
      * DbAdapter constructor.
      *
      * @param \Blade\Database\DbConnectionInterface $connection
@@ -31,6 +36,64 @@ class DbAdapter
     public function getConnection()
     {
         return $this->connection;
+    }
+
+
+    /**
+     * Start a new database transaction.
+     */
+    public function beginTransaction()
+    {
+        if (!$this->transactionCounter) {
+            $this->getConnection()->beginTransaction();
+        } else {
+            $this->execute('SAVEPOINT ' . $this->_getSavePointName());
+        }
+        $this->transactionCounter++;
+    }
+
+    /**
+     * Commit the active database transaction.
+     */
+    public function commit()
+    {
+        $this->transactionCounter--;
+        if ($this->transactionCounter < 0) {
+            throw new \RuntimeException(__METHOD__. ": No Active transaction, counter: " . $this->transactionCounter);
+
+        } elseif (!$this->transactionCounter) {
+            $this->getConnection()->commit();
+
+        } else {
+            $this->execute('RELEASE SAVEPOINT ' . $this->_getSavePointName());
+        }
+    }
+
+    /**
+     * Rollback the active database transaction.
+     *
+     * @return void
+     */
+    public function rollBack()
+    {
+        $this->transactionCounter--;
+        if ($this->transactionCounter < 0) {
+            throw new \RuntimeException(__METHOD__. ": No Active transaction, counter: " . $this->transactionCounter);
+
+        } elseif (!$this->transactionCounter) {
+            $this->getConnection()->rollBack();
+
+        } else {
+            $this->execute('ROLLBACK TO SAVEPOINT ' . $this->_getSavePointName());
+        }
+    }
+
+    /**
+     * @return string
+     */
+    private function _getSavePointName()
+    {
+        return 'sp' . $this->transactionCounter;
     }
 
 
@@ -156,15 +219,14 @@ class DbAdapter
      */
     public function transaction(Callable $func)
     {
-        $con = $this->getConnection();
-        $con->beginTransaction();
+        $this->beginTransaction();
         try {
             $result = $func();
-            $con->commit();
+            $this->commit();
             return $result;
 
         } catch (\Exception $e) {
-            $con->rollBack();
+            $this->rollBack();
             throw $e;
         }
     }

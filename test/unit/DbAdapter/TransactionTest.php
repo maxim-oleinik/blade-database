@@ -48,4 +48,30 @@ class TransactionTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(['begin', $sql, 'rollback'], $con->log);
     }
+
+
+    /**
+     * Вложенные транзакции
+     */
+    public function testNestTransactions()
+    {
+        $con = new TestDbConnection();
+        $db = new DbAdapter($con);
+
+        $db->beginTransaction();
+        $db->beginTransaction(); // sp1
+        $db->beginTransaction(); // sp2
+        $db->commit(); // sp2
+        $db->rollBack(); // sp1
+        $db->rollBack();
+
+        $this->assertEquals([
+            'begin',
+            'SAVEPOINT sp1',
+            'SAVEPOINT sp2',
+            'RELEASE SAVEPOINT sp2',
+            'ROLLBACK TO SAVEPOINT sp1',
+            'rollback',
+        ], $con->log);
+    }
 }
