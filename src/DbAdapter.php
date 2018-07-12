@@ -39,6 +39,9 @@ class DbAdapter
     }
 
 
+    // Transaction
+    // ------------------------------------------------------------------------
+
     /**
      * Start a new database transaction.
      */
@@ -96,6 +99,30 @@ class DbAdapter
         return 'sp' . $this->transactionCounter;
     }
 
+    /**
+     * Run callback within transaction
+     *
+     * @param  callable $func
+     * @return mixed
+     * @throws \Exception
+     */
+    public function transaction(Callable $func)
+    {
+        $this->beginTransaction();
+        try {
+            $result = $func();
+            $this->commit();
+            return $result;
+
+        } catch (\Exception $e) {
+            $this->rollBack();
+            throw $e;
+        }
+    }
+
+
+    // Execute
+    // ------------------------------------------------------------------------
 
     /**
      * Выполнить запрос не предполагающий возврат значений
@@ -109,6 +136,9 @@ class DbAdapter
         return $this->getConnection()->execute($query, $bindings);
     }
 
+
+    // Select
+    // ------------------------------------------------------------------------
 
     /**
      * Вернуть список ВСЕХ строк
@@ -130,24 +160,6 @@ class DbAdapter
     }
 
     /**
-     * Вернуть ОДНУ строку
-     *
-     * @param string $query
-     * @param array  $bindings
-     * @return array
-     */
-    public function selectRow($query, $bindings = []): array
-    {
-        if ($rows = $this->selectList($query, $bindings)) {
-            foreach ($rows as $row) {
-                return $row;
-            }
-        }
-
-        return [];
-    }
-
-    /**
      * Вернуть КОЛОНКУ ввиде массива
      *
      * @param string $query
@@ -164,21 +176,6 @@ class DbAdapter
         });
 
         return $result;
-    }
-
-    /**
-     * Вернуть значение ОДНОЙ ЯЧЕЙКИ
-     *
-     * @param string $query
-     * @param array  $bindings
-     * @return string|false - если ничего не найдено
-     */
-    public function selectValue($query, $bindings = [])
-    {
-        if ($row = $this->selectRow($query, $bindings)) {
-            return current($row);
-        }
-        return false;
     }
 
     /**
@@ -204,6 +201,39 @@ class DbAdapter
     }
 
     /**
+     * Вернуть ОДНУ строку
+     *
+     * @param string $query
+     * @param array  $bindings
+     * @return array
+     */
+    public function selectRow($query, $bindings = []): array
+    {
+        if ($rows = $this->selectList($query, $bindings)) {
+            foreach ($rows as $row) {
+                return $row;
+            }
+        }
+
+        return [];
+    }
+
+    /**
+     * Вернуть значение ОДНОЙ ЯЧЕЙКИ
+     *
+     * @param string $query
+     * @param array  $bindings
+     * @return string|false - если ничего не найдено
+     */
+    public function selectValue($query, $bindings = [])
+    {
+        if ($row = $this->selectRow($query, $bindings)) {
+            return current($row);
+        }
+        return false;
+    }
+
+    /**
      * Выкинуть исключение, если входящее значение не массив
      *
      * @param mixed $row
@@ -216,27 +246,8 @@ class DbAdapter
     }
 
 
-    /**
-     * Выполнить код в транзакции
-     *
-     * @param  callable $func
-     * @return mixed
-     * @throws \Exception
-     */
-    public function transaction(Callable $func)
-    {
-        $this->beginTransaction();
-        try {
-            $result = $func();
-            $this->commit();
-            return $result;
-
-        } catch (\Exception $e) {
-            $this->rollBack();
-            throw $e;
-        }
-    }
-
+    // Misc
+    // ------------------------------------------------------------------------
 
     /**
      * Разбить выборку на части
