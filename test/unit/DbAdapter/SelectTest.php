@@ -119,7 +119,7 @@ class SelectTest extends \PHPUnit_Framework_TestCase
         // Empty search
         $db = new DbAdapter($con = new TestDbConnection());
         $result = $db->selectValue($sql);
-        $this->assertNull($result);
+        $this->assertFalse($result);
     }
 
 

@@ -128,6 +128,7 @@ class DbAdapter
                 $result[] = $row;
             }
         }
+        unset($rows);
 
         return $result;
     }
@@ -177,13 +178,14 @@ class DbAdapter
      *
      * @param string $query
      * @param array  $bindings
-     * @return string|null
+     * @return string|false - если ничего не найдено
      */
     public function selectValue($query, array $bindings = [])
     {
         if ($row = $this->selectRow($query, $bindings)) {
             return current($row);
         }
+        return false;
     }
 
 
@@ -199,9 +201,10 @@ class DbAdapter
         $result = [];
         foreach ($this->selectList($query, $bindings) as $row) {
             $row = (array) $row;
-            if (count($row) < 2) {
-                throw new \InvalidArgumentException(__METHOD__ . ": Expected min 2 columns, got ", count($row));
+            if (count($row) != 2) {
+                throw new \RuntimeException(__METHOD__ . ": Expected 2 columns, got " . var_export($row, true));
             }
+
             $row = array_values($row);
             $result[$row[0]] = $row[1];
         }
