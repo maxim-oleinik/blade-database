@@ -58,12 +58,12 @@ class TransactionTest extends \PHPUnit_Framework_TestCase
         $con = new TestDbConnection();
         $db = new DbAdapter($con);
 
-        $db->beginTransaction();
-        $db->beginTransaction(); // sp1
-        $db->beginTransaction(); // sp2
-        $db->commit(); // sp2
-        $db->rollBack(); // sp1
-        $db->rollBack();
+        $this->assertSame(1, $db->beginTransaction());
+        $this->assertSame(2, $db->beginTransaction()); // sp1
+        $this->assertSame(3, $db->beginTransaction()); // sp2
+        $this->assertSame(2, $db->commit()); // sp2
+        $this->assertSame(1, $db->rollBack()); // sp1
+        $this->assertSame(0, $db->rollBack());
 
         $this->assertEquals([
             'begin',
@@ -71,6 +71,30 @@ class TransactionTest extends \PHPUnit_Framework_TestCase
             'SAVEPOINT sp2',
             'RELEASE SAVEPOINT sp2',
             'ROLLBACK TO SAVEPOINT sp1',
+            'rollback',
+        ], $con->log);
+    }
+
+
+    /**
+     * Rollback Force
+     */
+    public function testRollbackForce()
+    {
+        $con = new TestDbConnection();
+        $db = new DbAdapter($con);
+
+        $this->assertSame(1, $db->beginTransaction());
+        $this->assertSame(2, $db->beginTransaction());
+        $this->assertSame(3, $db->beginTransaction());
+        $this->assertSame(2, $db->rollBack());
+        $this->assertSame(0, $db->rollBack(true));
+
+        $this->assertEquals([
+            'begin',
+            'SAVEPOINT sp1',
+            'SAVEPOINT sp2',
+            'ROLLBACK TO SAVEPOINT sp2',
             'rollback',
         ], $con->log);
     }

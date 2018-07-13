@@ -44,6 +44,8 @@ class DbAdapter
 
     /**
      * Start a new database transaction.
+     *
+     * @return int - Nested transaction level
      */
     public function beginTransaction()
     {
@@ -53,10 +55,13 @@ class DbAdapter
             $this->execute('SAVEPOINT ' . $this->_getSavePointName());
         }
         $this->transactionCounter++;
+        return $this->transactionCounter;
     }
 
     /**
      * Commit the active database transaction.
+     *
+     * @return int - Nested transaction level
      */
     public function commit()
     {
@@ -70,25 +75,29 @@ class DbAdapter
         } else {
             $this->execute('RELEASE SAVEPOINT ' . $this->_getSavePointName());
         }
+        return $this->transactionCounter;
     }
 
     /**
      * Rollback the active database transaction.
      *
-     * @return void
+     * @param  bool $force - Полностью откатить всю транкзакцию со всеми уровнями вложенности
+     * @return int - Nested transaction level
      */
-    public function rollBack()
+    public function rollBack($force = false)
     {
         $this->transactionCounter--;
         if ($this->transactionCounter < 0) {
             throw new \RuntimeException(__METHOD__. ": No Active transaction, counter: " . $this->transactionCounter);
 
-        } elseif (!$this->transactionCounter) {
+        } elseif ($force || !$this->transactionCounter) {
             $this->getConnection()->rollBack();
+            $this->transactionCounter = 0;
 
         } else {
             $this->execute('ROLLBACK TO SAVEPOINT ' . $this->_getSavePointName());
         }
+        return $this->transactionCounter;
     }
 
     /**
