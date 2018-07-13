@@ -38,4 +38,10 @@ class PdoConnection extends \PDO implements DbConnectionInterface
             $callback($row);
         }
     }
+
+
+    public function escape($value): string
+    {
+        return $this->quote($value);
+    }
 }

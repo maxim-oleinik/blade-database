@@ -1,6 +1,7 @@
 <?php namespace Blade\Database\Test;
 
 use Blade\Database\DbConnectionInterface;
+use Blade\Database\Sql\SqlBuilder;
 
 class TestDbConnection implements DbConnectionInterface
 {
@@ -38,5 +39,10 @@ class TestDbConnection implements DbConnectionInterface
     public function rollBack()
     {
         $this->log[] = 'rollback';
+    }
+
+    public function escape($value): string
+    {
+        return SqlBuilder::escape($value);
     }
 }

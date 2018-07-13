@@ -282,4 +282,16 @@ class DbAdapter
             } while ($itemsLeft > 0);
         }
     }
+
+
+    /**
+     * Экранирование значения для подстановки в запрос
+     *
+     * @param  string $value
+     * @return string
+     */
+    public function escape($value): string
+    {
+        return $this->getConnection()->escape($value);
+    }
 }

@@ -48,4 +48,13 @@ interface DbConnectionInterface
      * @return void
      */
     public function rollBack();
+
+
+    /**
+     * Экранирование значения для подстановки в запрос
+     *
+     * @param  string $value
+     * @return string
+     */
+    public function escape($value): string;
 }
