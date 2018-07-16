@@ -14,6 +14,7 @@ Install
     {
         ->execute($sql, $bindings = []): int;
         ->each($sql, $bindings = [], callable $callback);
+        ->escape($value): string
         ->beginTransaction();
         ->commit();
         ->rollBack();
@@ -29,7 +30,7 @@ DbAdapter
     $db = new DbAdapter(new MyDbConnection);
 
         ->execute($query, array $bindings = []): bool
-        ->selectList($query, array $bindings = []): array
+        ->selectAll($query, array $bindings = []): array
         ->selectRow($query, array $bindings = []): array
         ->selectColumn($query, array $bindings = []): array
         ->selectValue($query, array $bindings = [])

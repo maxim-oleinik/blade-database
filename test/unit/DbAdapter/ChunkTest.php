@@ -18,7 +18,7 @@ class ChunkTest extends \PHPUnit_Framework_TestCase
         $db = new DbAdapter($con);
 
         $con->returnValues = [
-            [2],
+            [[2]],
             $rows1 = [['id' => 1, 'name' => 'A']],
             $rows2 = [['id' => 2, 'name' => 'B']],
         ];

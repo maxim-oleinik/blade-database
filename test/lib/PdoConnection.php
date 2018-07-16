@@ -5,11 +5,7 @@ use Blade\Database\DbConnectionInterface;
 class PdoConnection extends \PDO implements DbConnectionInterface
 {
     /**
-     * Выполнить запрос
-     *
-     * @param string $sql
-     * @param array $bindings
-     * @return bool|int
+     * {@inheritdoc}
      */
     public function execute($sql, $bindings = []): int
     {
@@ -21,12 +17,7 @@ class PdoConnection extends \PDO implements DbConnectionInterface
     }
 
     /**
-     * Выполнить SQL и для каждой строки выборки вызвать указанную callback-функцию
-     * callback принимает строку ТОЛЬКО как МАССИВ
-     *
-     * @param string   $sql
-     * @param array    $bindings
-     * @param callable $callback
+     * {@inheritdoc}
      */
     public function each($sql, $bindings = [], callable $callback)
     {
@@ -39,7 +30,9 @@ class PdoConnection extends \PDO implements DbConnectionInterface
         }
     }
 
-
+    /**
+     * {@inheritdoc}
+     */
     public function escape($value): string
     {
         return $this->quote($value);

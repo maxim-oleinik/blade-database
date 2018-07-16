@@ -20,14 +20,14 @@ class SelectTest extends \PHPUnit_Framework_TestCase
             ['id' => 1, 'name' => 'A'],
             ['id' => 2, 'name' => 'B'],
         ]];
-        $result = $db->selectList($sql = 'select *');
+        $result = $db->selectAll($sql = 'select *');
 
         $this->assertEquals($rows, $result);
         $this->assertEquals([$sql], $con->log);
 
         // Empty search
         $con->returnValues = [];
-        $result = $db->selectList($sql = 'select *');
+        $result = $db->selectAll($sql = 'select *');
         $this->assertSame([], $result);
     }
 

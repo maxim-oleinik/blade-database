@@ -156,7 +156,7 @@ class DbAdapter
      * @param array  $bindings
      * @return array
      */
-    public function selectList($query, $bindings = []): array
+    public function selectAll($query, $bindings = []): array
     {
         $result = [];
 
@@ -218,7 +218,7 @@ class DbAdapter
      */
     public function selectRow($query, $bindings = []): array
     {
-        if ($rows = $this->selectList($query, $bindings)) {
+        if ($rows = $this->selectAll($query, $bindings)) {
             foreach ($rows as $row) {
                 return $row;
             }
@@ -278,7 +278,7 @@ class DbAdapter
                 $page++;
                 $offset = ($page - 1) * $pageSize;
                 $itemsLeft -= $pageSize;
-                $handler($this->selectList($pageSql));
+                $handler($this->selectAll($pageSql));
             } while ($itemsLeft > 0);
         }
     }

@@ -101,7 +101,7 @@ class PostgresqlAdapterTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals([
                 ['id'=>1, 'code'=>'AA'],
                 ['id'=>2, 'code'=>'B'],
-            ], $db->selectList($sql));
+            ], $db->selectAll($sql));
 
 
             /**
@@ -127,7 +127,7 @@ class PostgresqlAdapterTest extends \PHPUnit_Framework_TestCase
             }
 
             // Транзакцию накатили, изменений нет
-            $this->assertSame([], $db->selectList($findInsertedSql));
+            $this->assertSame([], $db->selectAll($findInsertedSql));
             $this->assertSame([], $db->selectRow($findInsertedSql));
             $this->assertSame([], $db->selectColumn($findInsertedSql));
             $this->assertSame([], $db->selectKeyValue($findInsertedSql));
