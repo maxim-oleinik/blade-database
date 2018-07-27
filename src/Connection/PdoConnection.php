@@ -1,4 +1,4 @@
-<?php namespace Blade\Database\Test;
+<?php namespace Blade\Database\Connection;
 
 use Blade\Database\DbConnectionInterface;
 

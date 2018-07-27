@@ -1,7 +1,7 @@
 <?php namespace Test\Blade\Database\DbAdapter;
 
 use Blade\Database\DbAdapter;
-use Blade\Database\Test\TestDbConnection;
+use Blade\Database\Connection\TestStubDbConnection;
 
 /**
  * @see \Blade\Database\DbAdapter
@@ -13,7 +13,7 @@ class TransactionTest extends \PHPUnit_Framework_TestCase
      */
     public function testTransactionCommit()
     {
-        $con = new TestDbConnection();
+        $con = new TestStubDbConnection();
         $db = new DbAdapter($con);
 
         $sql = 'select *';
@@ -30,7 +30,7 @@ class TransactionTest extends \PHPUnit_Framework_TestCase
      */
     public function testTransactionRollback()
     {
-        $con = new TestDbConnection();
+        $con = new TestStubDbConnection();
         $db = new DbAdapter($con);
 
         $sql = 'select *';
@@ -55,7 +55,7 @@ class TransactionTest extends \PHPUnit_Framework_TestCase
      */
     public function testNestTransactions()
     {
-        $con = new TestDbConnection();
+        $con = new TestStubDbConnection();
         $db = new DbAdapter($con);
 
         $this->assertSame(1, $db->beginTransaction());
@@ -81,7 +81,7 @@ class TransactionTest extends \PHPUnit_Framework_TestCase
      */
     public function testRollbackForce()
     {
-        $con = new TestDbConnection();
+        $con = new TestStubDbConnection();
         $db = new DbAdapter($con);
 
         $this->assertSame(1, $db->beginTransaction());

@@ -1,7 +1,7 @@
 <?php namespace Test\Blade\Database\DbAdapter;
 
 use Blade\Database\DbAdapter;
-use Blade\Database\Test\TestDbConnection;
+use Blade\Database\Connection\TestStubDbConnection;
 
 /**
  * @see \Blade\Database\DbAdapter
@@ -13,13 +13,13 @@ class SelectTest extends \PHPUnit_Framework_TestCase
      */
     public function testSelectList()
     {
-        $con = new TestDbConnection();
+        $con = new TestStubDbConnection();
         $db = new DbAdapter($con);
 
-        $con->returnValues = [$rows = [
+        $con->addReturnResultSet($rows = [
             ['id' => 1, 'name' => 'A'],
             ['id' => 2, 'name' => 'B'],
-        ]];
+        ]);
         $result = $db->selectAll($sql = 'select *');
 
         $this->assertEquals($rows, $result);
@@ -37,11 +37,11 @@ class SelectTest extends \PHPUnit_Framework_TestCase
      */
     public function testSelectRow()
     {
-        $db = new DbAdapter($con = new TestDbConnection());
-        $con->returnValues = [[
+        $db = new DbAdapter($con = new TestStubDbConnection());
+        $con->addReturnResultSet([
             $row = ['id' => 1, 'name' => 'A'],
             ['id' => 2, 'name' => 'B'],
-        ]];
+        ]);
         $result = $db->selectRow($sql = 'select *');
 
         $this->assertEquals($row, $result);
@@ -50,13 +50,13 @@ class SelectTest extends \PHPUnit_Framework_TestCase
         // StdClass
         $row = new \StdClass;
         $row->id = 1;
-        $db = new DbAdapter($con = new TestDbConnection());
-        $con->returnValues = [[$row]];
+        $db = new DbAdapter($con = new TestStubDbConnection());
+        $con->addReturnResultSet([$row]);
         $result = $db->selectRow($sql);
         $this->assertEquals(['id' => 1], $result);
 
         // Empty search
-        $db = new DbAdapter($con = new TestDbConnection());
+        $db = new DbAdapter($con = new TestStubDbConnection());
         $con->returnValues = [];
         $result = $db->selectRow($sql);
         $this->assertSame([], $result);
@@ -68,11 +68,11 @@ class SelectTest extends \PHPUnit_Framework_TestCase
      */
     public function testSelectColumn()
     {
-        $db = new DbAdapter($con = new TestDbConnection());
-        $con->returnValues = [[
+        $db = new DbAdapter($con = new TestStubDbConnection());
+        $con->addReturnResultSet([
             $row = ['id' => 1, 'name' => 'A'],
-            ['id' => 2, 'name' => 'B'],
-        ]];
+            ['id' => 2, 'name' => 'B']
+        ]);
         $result = $db->selectColumn($sql = 'select *');
 
         $this->assertEquals([1, 2], $result);
@@ -81,13 +81,13 @@ class SelectTest extends \PHPUnit_Framework_TestCase
         // StdClass
         $row = new \StdClass;
         $row->id = 1;
-        $db = new DbAdapter($con = new TestDbConnection());
-        $con->returnValues = [$row];
+        $db = new DbAdapter($con = new TestStubDbConnection());
+        $con->addReturnResultSet([$row]);
         $result = $db->selectColumn($sql);
         $this->assertEquals([1], $result);
 
         // Empty search
-        $db = new DbAdapter($con = new TestDbConnection());
+        $db = new DbAdapter($con = new TestStubDbConnection());
         $result = $db->selectColumn($sql);
         $this->assertSame([], $result);
     }
@@ -98,11 +98,11 @@ class SelectTest extends \PHPUnit_Framework_TestCase
      */
     public function testSelectValue()
     {
-        $db = new DbAdapter($con = new TestDbConnection());
-        $con->returnValues = [[
+        $db = new DbAdapter($con = new TestStubDbConnection());
+        $con->addReturnResultSet([
             $row = ['id' => 'a', 'name' => 'A'],
             ['id' => 2, 'name' => 'B'],
-        ]];
+        ]);
         $result = $db->selectValue($sql = 'select *');
 
         $this->assertEquals('a', $result);
@@ -111,13 +111,13 @@ class SelectTest extends \PHPUnit_Framework_TestCase
         // StdClass
         $row = new \StdClass;
         $row->id = 'a';
-        $db = new DbAdapter($con = new TestDbConnection());
-        $con->returnValues = [[$row]];
+        $db = new DbAdapter($con = new TestStubDbConnection());
+        $con->addReturnResultSet([$row]);
         $result = $db->selectValue($sql);
         $this->assertEquals('a', $result);
 
         // Empty search
-        $db = new DbAdapter($con = new TestDbConnection());
+        $db = new DbAdapter($con = new TestStubDbConnection());
         $result = $db->selectValue($sql);
         $this->assertFalse($result);
     }
@@ -128,11 +128,11 @@ class SelectTest extends \PHPUnit_Framework_TestCase
      */
     public function testSelectKeyValue()
     {
-        $db = new DbAdapter($con = new TestDbConnection());
-        $con->returnValues = [[
+        $db = new DbAdapter($con = new TestStubDbConnection());
+        $con->addReturnResultSet([
             ['id' => 1, 'name' => 'A'],
             ['id' => 2, 'name' => 'B'],
-        ]];
+        ]);
         $result = $db->selectKeyValue($sql = 'select *');
 
         $this->assertEquals([1=>'A', 2=>'B'], $result);
@@ -142,13 +142,13 @@ class SelectTest extends \PHPUnit_Framework_TestCase
         $row = new \StdClass;
         $row->id = '1';
         $row->code = 'A';
-        $db = new DbAdapter($con = new TestDbConnection());
-        $con->returnValues = [[$row]];
+        $db = new DbAdapter($con = new TestStubDbConnection());
+        $con->addReturnResultSet([$row]);
         $result = $db->selectKeyValue($sql);
         $this->assertEquals([1=>'A'], $result);
 
         // Empty search
-        $db = new DbAdapter($con = new TestDbConnection());
+        $db = new DbAdapter($con = new TestStubDbConnection());
         $result = $db->selectKeyValue($sql);
         $this->assertSame([], $result);
     }

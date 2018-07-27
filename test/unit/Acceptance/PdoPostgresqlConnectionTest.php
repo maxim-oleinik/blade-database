@@ -1,7 +1,8 @@
 <?php namespace Test\Blade\Database\Acceptance;
+
 use Blade\Database\DbAdapter;
 use Blade\Database\Sql\SqlBuilder;
-use Blade\Database\Test\PdoConnection;
+use Blade\Database\Connection\PdoConnection;
 
 defined('TESTS_BLADE_DB_POSTGRES_HOST') || define('TESTS_BLADE_DB_POSTGRES_HOST', getenv('TESTS_BLADE_DB_POSTGRES_HOST'));
 defined('TESTS_BLADE_DB_POSTGRES_USERNAME') || define('TESTS_BLADE_DB_POSTGRES_USERNAME', getenv('TESTS_BLADE_DB_POSTGRES_USERNAME'));
@@ -13,7 +14,7 @@ defined('TESTS_BLADE_DB_POSTGRES_PORT') || define('TESTS_BLADE_DB_POSTGRES_PORT'
 /**
  * @see \Blade\Database\DbAdapter
  */
-class PostgresqlAdapterTest extends \PHPUnit_Framework_TestCase
+class PdoPostgresqlConnectionTest extends \PHPUnit_Framework_TestCase
 {
     public function testAll()
     {

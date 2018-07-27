@@ -1,13 +1,30 @@
-<?php namespace Blade\Database\Test;
+<?php namespace Blade\Database\Connection;
 
 use Blade\Database\DbConnectionInterface;
 use Blade\Database\Sql\SqlBuilder;
 
-class TestDbConnection implements DbConnectionInterface
+class TestStubDbConnection implements DbConnectionInterface
 {
     public $log = [];
     public $returnValues = [];
     private $queryCount = -1;
+
+
+    /**
+     * Добавить набор строк, которые вернет N-ый запрос
+     *
+     * @param array $rows
+     */
+    public function addReturnResultSet(array $rows)
+    {
+        if ($rows) {
+            $row = current($rows);
+            if (!is_array($row) && !$row instanceof \StdClass) {
+                throw new \InvalidArgumentException(__METHOD__.": Expected nested array: [[row1], [row2]]");
+            }
+        }
+        $this->returnValues[] = $rows;
+    }
 
     public function execute($sql, $bindings = []):int
     {
