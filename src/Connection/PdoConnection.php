@@ -35,6 +35,6 @@ class PdoConnection extends \PDO implements DbConnectionInterface
      */
     public function escape($value): string
     {
-        return $this->quote($value);
+        return substr($this->quote($value), 1, -1);
     }
 }
