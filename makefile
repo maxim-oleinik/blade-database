@@ -14,6 +14,9 @@ vendor/composer/installed.json: composer.lock
 
 
 # Тесты
-test:
+phpunit.xml:
+	cp phpunit-dist.xml phpunit.xml
+
+test: phpunit.xml
 	@echo
 	-./vendor/bin/phpunit
