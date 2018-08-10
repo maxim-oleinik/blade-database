@@ -142,6 +142,28 @@ class SqlBuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals("SELECT *\nFROM {$this->table}\n{$t2}\n{$t3}", (string)$sql);
     }
 
+    /**
+     * JOIN - Merge SQL
+     */
+    public function testJoinMerge()
+    {
+        $sql2 = SqlBuilder::make('some label should be ignored')
+            ->from('table2', 't2')
+            ->andWhere('t2.col=123');
+
+        $sql = $this->_sql()->setFromAlias('t1')
+            ->innerJoin($sql2, 'ON t2.id=t1.id')
+            ->leftJoin($sql2, 'ON t2.col=t1.col')
+            ->rightJoin($sql2)
+            ->andWhere('t1.col=55');
+
+        $this->assertEquals("SELECT *\nFROM {$this->table} AS t1\n".
+            "INNER JOIN table2 AS t2 ON t2.id=t1.id\n" .
+            "LEFT JOIN table2 AS t2 ON t2.col=t1.col\n" .
+            "RIGHT JOIN table2 AS t2\n".
+            "WHERE t2.col=123 AND t2.col=123 AND t2.col=123 AND t1.col=55", (string)$sql);
+    }
+
 
     /**
      * ALL Select

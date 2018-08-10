@@ -246,6 +246,28 @@ class SqlBuilder
         return $this;
     }
 
+    public function innerJoin(SqlBuilder $sql, $condition = null)
+    {
+        return $this->_join('INNER', $sql, $condition);
+    }
+
+    public function leftJoin(SqlBuilder $sql, $condition = null)
+    {
+        return $this->_join('LEFT', $sql, $condition);
+    }
+
+    public function rightJoin(SqlBuilder $sql, $condition = null)
+    {
+        return $this->_join('RIGHT', $sql, $condition);
+    }
+
+    private function _join($type, SqlBuilder $sql, $condition)
+    {
+        $this->addJoin(trim($type . ' JOIN ' . $sql->buildFrom() . ' ' . $condition));
+        $this->andWhere($sql->buildWhere(true));
+        return $this;
+    }
+
 
     /**
      * SELECT

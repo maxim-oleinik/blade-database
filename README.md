@@ -82,23 +82,40 @@ SqlBuilder
         ->addSelect("name")
         ->from("my_table", $alias = 't')
         ->setFromAlias('t')
-.
+
         ->addJoin("LEFT JOIN authors AS a ON (a.id=t.author_id)")
-.
+
         ->andWhere("t.id = %d", 123)
         ->andWhere("a.name > '%s'", 'some text')
         ->andWhereIn("t.code", [1,2,3])
         ->andWhereNotIn("t.code", [4,5])
-.
+
         ->orderBy("id ASC, code")
         ->addOrder("name DESC")
-.
+
         ->groupBy("t.code")
         ->having("sum(code) > 10")
-.
+
         ->limit(10, $offset = 20);
     echo $sql;
 ```
+
+**Join**
+```
+    $sql = SqlBuilder::make()
+        ->addJoin("LEFT JOIN authors AS a ON (a.id=t.author_id)")
+        ->andWhere("a.name > '%s'", 'some text');
+
+    // Объединение 2ух запросов в Join
+    $sqlAuthors = SqlBuilder::make()->from('authors', 'a')
+        ->andWhere("a.name > '%s'", 'some text');
+
+    $sql = SqlBuilder::make()->from("my_table", 't')
+        ->innerJoin($sqlAuthors, 'ON (a.id=t.author_id)')
+        ->leftJoin($sqlAuthors, 'USING author_id')
+        ->rightJoin($sqlAuthors)
+```
+
 **Подстановка count()**
 ```
     SqlBuilder::make()
