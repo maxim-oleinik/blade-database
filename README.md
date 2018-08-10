@@ -8,7 +8,7 @@ Install
 1. Add to `composer.json`
 
 2. Implement `\Blade\Database\DbConnectionInterface`  
-Реализовать свой "мост" между существующим коннектом и этим Адаптером
+Реализовать "мост" между своим коннектом к базе и этим Адаптером
 ```
     class MyDbConnection implements \Blade\Database\DbConnectionInterface
     {
@@ -20,6 +20,26 @@ Install
         ->rollBack();
     }
 ```
+Или использовать готовый:
+```
+    // PDO
+    $dsn = sprintf('mysql:host=%s;port=%d;dbname=%s', $host, $port, $dbName);
+    $connection = new \Blade\Database\Connection\PdoConnection($dsn, $user, $pass, [
+        \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_EXCEPTION,
+        \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
+    ]);
+
+    // PostgreSQL (pgsql)
+    $dsn = sprintf('host=%s port=%d dbname=%s user=%s password=%s',
+        $host, $port, $dbName, $user, $pass
+    );
+    $connection = new \Blade\Database\Connection\PostgresConnection($dsn, PGSQL_CONNECT_FORCE_NEW);
+
+    // MySQL (mysqli)
+    $connection = new \Blade\Database\Connection\MysqlConnection(
+        $host, $user, $pass, $dbName, $port
+    );
+```
 
 
 DbAdapter
@@ -29,14 +49,14 @@ DbAdapter
 ```
     $db = new DbAdapter(new MyDbConnection);
 
-        ->execute($query, array $bindings = []): bool
-        ->selectAll($query, array $bindings = []): array
-        ->selectRow($query, array $bindings = []): array
-        ->selectColumn($query, array $bindings = []): array
-        ->selectValue($query, array $bindings = [])
-        ->selectKeyValue($query, array $bindings = []): array
+        ->execute($query, array $bindings = []): int          - Кол-во затронутых строк
+        ->selectAll($query, array $bindings = []): array      - Выбрать всю выборку в один массив
+        ->selectRow($query, array $bindings = []): array      - Выбрать одну строку
+        ->selectColumn($query, array $bindings = []): array   - Выбрать значение 1 колонки в массив
+        ->selectValue($query, array $bindings = []): string   - Выбрать единственное значение
+        ->selectKeyValue($query, array $bindings = []): array - Выбрать значения 2ух колонок в ассоциативный массив col1 => $col2
 
-        ->chunk($pageSize, SqlBuilder $sql, callable $handler)
+        ->chunk($pageSize, SqlBuilder $sql, callable $handler) - Разбить выборку на части и вызвать $handler(array $rows) для каждой
 
         ->beginTransaction();
         ->commit();
