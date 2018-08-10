@@ -18,6 +18,14 @@
         <env name="TESTS_BLADE_DB_POSTGRES_PASSWORD" value="" />
         <env name="TESTS_BLADE_DB_POSTGRES_DATABASE" value="" />
         <env name="TESTS_BLADE_DB_POSTGRES_PORT" value="5432" />
+
+        <!-- MySQL -->
+        <env name="TESTS_BLADE_DB_MYSQL_ENABLED" value="false" />
+        <env name="TESTS_BLADE_DB_MYSQL_HOST" value="127.0.0.1" />
+        <env name="TESTS_BLADE_DB_MYSQL_USERNAME" value="" />
+        <env name="TESTS_BLADE_DB_MYSQL_PASSWORD" value="" />
+        <env name="TESTS_BLADE_DB_MYSQL_DATABASE" value="" />
+        <env name="TESTS_BLADE_DB_MYSQL_PORT" value="3306" />
     </php>
 
     <testsuites>

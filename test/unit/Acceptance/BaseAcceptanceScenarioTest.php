@@ -6,6 +6,14 @@ use Blade\Database\Sql\SqlBuilder;
 
 abstract class BaseAcceptanceScenarioTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var bool - Allow run CREATE TABLE in transaction
+     */
+    protected $allowDdlTransactions = true;
+
+    /**
+     * @param \Blade\Database\DbConnectionInterface $connection
+     */
     public function runScenario(DbConnectionInterface $connection)
     {
         $db = new DbAdapter($connection);
@@ -21,7 +29,9 @@ abstract class BaseAcceptanceScenarioTest extends \PHPUnit_Framework_TestCase
             }
 
 
-            $db->beginTransaction();
+            if ($this->allowDdlTransactions) {
+                $db->beginTransaction();
+            }
 
             $tableName = 'tmp_blade_test';
             $baseSql = SqlBuilder::make()->from($tableName);
@@ -33,6 +43,10 @@ abstract class BaseAcceptanceScenarioTest extends \PHPUnit_Framework_TestCase
                   CONSTRAINT {$tableName}_pkey PRIMARY KEY (id)
                 )
             ");
+
+            if (!$this->allowDdlTransactions) {
+                $db->beginTransaction();
+            }
 
             /**
              * Excecute - insert, update
@@ -143,16 +157,18 @@ abstract class BaseAcceptanceScenarioTest extends \PHPUnit_Framework_TestCase
                 $this->assertFalse((bool)$db->selectValue($baseSql->copy()->andWhere('id=4')));
             $db->rollBack();
 
-        } catch (\Exception $e) {}
+        } catch (\Exception $e) {
+        }
 
         \Blade\Database\Sql\SqlBuilder::setEscapeMethod(function($value){
             return str_replace("'", "''", $value);
         });
 
+        $db->rollBack(true);
+        $db->execute("DROP TABLE IF EXISTS {$tableName}");
+
         if (isset($e)) {
             throw $e;
         }
-
-        $db->rollBack();
     }
 }

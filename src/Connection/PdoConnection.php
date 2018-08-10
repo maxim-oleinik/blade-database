@@ -9,7 +9,11 @@ class PdoConnection extends \PDO implements DbConnectionInterface
      */
     public function execute($sql, $bindings = []): int
     {
-        $result = $this->exec($sql);
+        try {
+            $result = $this->exec($sql);
+        } catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage() . PHP_EOL . $sql, null, $e);
+        }
         if (false === $result) {
             throw new \RuntimeException(var_export($this->errorInfo(), true) . PHP_EOL . $sql);
         }
