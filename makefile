@@ -9,8 +9,8 @@
 build: vendor/composer/installed.json
 	composer dump
 
-vendor/composer/installed.json: composer.lock
-	composer install
+vendor/composer/installed.json: composer.json
+	composer update
 
 
 # Тесты
