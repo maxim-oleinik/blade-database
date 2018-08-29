@@ -79,7 +79,9 @@ class SqlBuilder
      */
     public static function escape($value)
     {
-        $method = self::$escapeMethod;
+        if (!$method = self::$escapeMethod) {
+            throw new \RuntimeException(__METHOD__. ": Escape method NOT set!");
+        }
         return $method($value);
     }
 
