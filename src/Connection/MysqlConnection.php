@@ -4,7 +4,12 @@ use Blade\Database\DbConnectionInterface;
 
 class MysqlConnection implements DbConnectionInterface
 {
-    private $host, $user, $pass, $dbName, $port, $socket;
+    private $host;
+    private $user;
+    private $pass;
+    private $dbName;
+    private $port;
+    private $socket;
 
     /**
      * @var \mysqli
@@ -13,6 +18,13 @@ class MysqlConnection implements DbConnectionInterface
 
     /**
      * Конструктор
+     *
+     * @param string $host
+     * @param string $user
+     * @param string $pass
+     * @param string $dbName
+     * @param int    $port
+     * @param string $socket
      */
     public function __construct($host = null, $user = null, $pass = null, $dbName = null, $port = null, $socket = null)
     {
@@ -106,7 +118,8 @@ class MysqlConnection implements DbConnectionInterface
      * Выполнить запрос и вернуть resource-результат
      *
      * @param string $sql
-     * @param array $bindings
+     * @param array  $bindings
+     * @param bool   $useResult
      * @return \mysqli_result
      */
     private function _query($sql, $bindings = [], $useResult = false)

@@ -115,7 +115,7 @@ class DbAdapter
      * @return mixed
      * @throws \Exception
      */
-    public function transaction(Callable $func)
+    public function transaction(callable $func)
     {
         $this->beginTransaction();
         try {
@@ -137,7 +137,7 @@ class DbAdapter
      * Выполнить запрос не предполагающий возврат значений
      *
      * @param string $query
-     * @param array $bindings
+     * @param array  $bindings
      * @return bool|int
      */
     public function execute($query, $bindings = [])

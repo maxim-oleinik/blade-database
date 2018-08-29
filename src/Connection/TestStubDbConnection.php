@@ -26,12 +26,20 @@ class TestStubDbConnection implements DbConnectionInterface
         $this->returnValues[] = $rows;
     }
 
+
+    /**
+     * {@inheritdoc}
+     */
     public function execute($sql, $bindings = []):int
     {
         $this->log[] = (string)$sql;
         return 1;
     }
 
+
+    /**
+     * {@inheritdoc}
+     */
     public function each($sql, $bindings = [], callable $callback)
     {
         $this->log[] = (string)$sql;
@@ -43,21 +51,35 @@ class TestStubDbConnection implements DbConnectionInterface
         }
     }
 
+
+    /**
+     * {@inheritdoc}
+     */
     public function beginTransaction()
     {
         $this->log[] = 'begin';
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function commit()
     {
         $this->log[] = 'commit';
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function rollBack()
     {
         $this->log[] = 'rollback';
     }
 
+
+    /**
+     * {@inheritdoc}
+     */
     public function escape($value): string
     {
         return SqlBuilder::escape($value);

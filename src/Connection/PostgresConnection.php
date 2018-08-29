@@ -101,7 +101,7 @@ class PostgresConnection implements DbConnectionInterface
      * Выполнить запрос и вернуть resource-результат
      *
      * @param string $sql
-     * @param array $bindings
+     * @param array  $bindings
      * @return resource
      */
     private function _query($sql, $bindings = [])

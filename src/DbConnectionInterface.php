@@ -10,8 +10,7 @@ interface DbConnectionInterface
      * Реализовать собственную обработку ошибок выполнения запроса
      *
      * @param string $sql
-     * @param array $bindings
-     *
+     * @param array  $bindings
      * @return int
      */
     public function execute($sql, $bindings = []): int;

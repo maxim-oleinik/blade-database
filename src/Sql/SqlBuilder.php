@@ -373,7 +373,7 @@ class SqlBuilder
         if ($cond instanceof SqlBuilder) {
             $cond = sprintf('(%s)', $cond->buildWhere(true));
 
-        } else if (count($args) > 1) {
+        } elseif (count($args) > 1) {
             $values = $args;
             array_shift($values);
             $values = array_map(self::$escapeMethod, $values);
@@ -489,13 +489,13 @@ class SqlBuilder
     public function __toString()
     {
         if ($this->isInsert) {
-            return $this->_to_insert();
-        } else if ($this->isUpdate) {
-            return $this->_to_update();
-        } else if ($this->isDelete) {
-            return $this->_to_delete();
+            return $this->_toInsert();
+        } elseif ($this->isUpdate) {
+            return $this->_toUpdate();
+        } elseif ($this->isDelete) {
+            return $this->_toDelete();
         } else {
-            return $this->_to_select();
+            return $this->_toSelect();
         }
     }
 
@@ -503,7 +503,7 @@ class SqlBuilder
     /**
      * @return string - SQL SELECT
      */
-    private function _to_select()
+    private function _toSelect()
     {
         $label = null;
         if ($this->label) {
@@ -548,7 +548,7 @@ class SqlBuilder
     /**
      * @return string - SQL INSERT
      */
-    private function _to_insert()
+    private function _toInsert()
     {
         if (!$this->batchMode) {
             $values = [$this->values];
@@ -578,7 +578,7 @@ class SqlBuilder
     /**
      * @return string - SQL UPDATE
      */
-    private function _to_update()
+    private function _toUpdate()
     {
         $values = [];
         foreach ($this->values as $key => $val) {
@@ -600,7 +600,7 @@ class SqlBuilder
     /**
      * @return string - SQL DELETE
      */
-    private function _to_delete()
+    private function _toDelete()
     {
         return sprintf('DELETE FROM %s'.$this->buildWhere(), $this->buildFrom());
     }
@@ -647,9 +647,9 @@ class SqlBuilder
     {
         if (null === $val) {
             $val = 'NULL';
-        } else if (is_int($val) || is_float($val) || $val instanceof SqlFunc) {
+        } elseif (is_int($val) || is_float($val) || $val instanceof SqlFunc) {
             // none
-        } else if (is_bool($val)) {
+        } elseif (is_bool($val)) {
             $val = (int)$val;
         } else {
             $val = sprintf("'%s'", self::escape($val));
