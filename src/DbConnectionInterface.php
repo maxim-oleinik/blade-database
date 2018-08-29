@@ -13,7 +13,7 @@ interface DbConnectionInterface
      * @param array  $bindings
      * @return int
      */
-    public function execute($sql, $bindings = []): int;
+    public function execute($sql, array $bindings = []): int;
 
     /**
      * Выполнить SQL и для каждой строки выборки вызвать указанную callback-функцию
@@ -21,10 +21,10 @@ interface DbConnectionInterface
      * Реализовать собственную обработку ошибок выполнения запроса
      *
      * @param string   $sql
-     * @param array    $bindings
      * @param callable $callback
+     * @param array    $bindings
      */
-    public function each($sql, $bindings = [], callable $callback);
+    public function each($sql, callable $callback, array $bindings = []);
 
 
     /**

@@ -64,7 +64,7 @@ class PostgresConnection implements DbConnectionInterface
     /**
      * {@inheritdoc}
      */
-    public function execute($sql, $bindings = []): int
+    public function execute($sql, array $bindings = []): int
     {
         $result = $this->_query($sql, $bindings);
         $c = (int) pg_affected_rows($result);
@@ -76,7 +76,7 @@ class PostgresConnection implements DbConnectionInterface
     /**
      * {@inheritdoc}
      */
-    public function each($sql, $bindings = [], callable $callback)
+    public function each($sql, callable $callback, array $bindings = [])
     {
         $result = $this->_query($sql, $bindings);
 

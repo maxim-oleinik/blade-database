@@ -7,7 +7,7 @@ class PdoConnection extends \PDO implements DbConnectionInterface
     /**
      * {@inheritdoc}
      */
-    public function execute($sql, $bindings = []): int
+    public function execute($sql, array $bindings = []): int
     {
         try {
             $result = $this->exec($sql);
@@ -23,7 +23,7 @@ class PdoConnection extends \PDO implements DbConnectionInterface
     /**
      * {@inheritdoc}
      */
-    public function each($sql, $bindings = [], callable $callback)
+    public function each($sql, callable $callback, array $bindings = [])
     {
         if (!$statement = $this->query($sql)) {
             throw new \RuntimeException(var_export($this->errorInfo(), true) . PHP_EOL . $sql);

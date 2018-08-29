@@ -30,7 +30,7 @@ class TestStubDbConnection implements DbConnectionInterface
     /**
      * {@inheritdoc}
      */
-    public function execute($sql, $bindings = []):int
+    public function execute($sql, array $bindings = []):int
     {
         $this->log[] = (string)$sql;
         return 1;
@@ -40,7 +40,7 @@ class TestStubDbConnection implements DbConnectionInterface
     /**
      * {@inheritdoc}
      */
-    public function each($sql, $bindings = [], callable $callback)
+    public function each($sql, callable $callback, array $bindings = [])
     {
         $this->log[] = (string)$sql;
         $this->queryCount++;

@@ -160,10 +160,10 @@ class DbAdapter
     {
         $result = [];
 
-        $this->getConnection()->each((string)$query, $bindings, function ($row) use (&$result) {
+        $this->getConnection()->each((string)$query, function ($row) use (&$result) {
             $this->_checkCallbackArguments($row);
             $result[] = $row;
-        });
+        }, $bindings);
 
         return $result;
     }
@@ -179,10 +179,10 @@ class DbAdapter
     {
         $result = [];
 
-        $this->getConnection()->each((string)$query, $bindings, function ($row) use (&$result) {
+        $this->getConnection()->each((string)$query, function ($row) use (&$result) {
             $this->_checkCallbackArguments($row);
             $result[] = current($row);
-        });
+        }, $bindings);
 
         return $result;
     }
@@ -198,13 +198,13 @@ class DbAdapter
     {
         $result = [];
 
-        $this->getConnection()->each((string)$query, $bindings, function ($row) use (&$result) {
+        $this->getConnection()->each((string)$query, function ($row) use (&$result) {
             $this->_checkCallbackArguments($row);
             if (count($row) != 2) {
                 throw new \RuntimeException(__METHOD__ . ": Expected 2 columns, got " . var_export($row, true));
             }
             $result[current($row)] = next($row);
-        });
+        }, $bindings);
 
         return $result;
     }

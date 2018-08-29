@@ -80,7 +80,7 @@ class MysqlConnection implements DbConnectionInterface
     /**
      * {@inheritdoc}
      */
-    public function execute($sql, $bindings = []): int
+    public function execute($sql, array $bindings = []): int
     {
         $this->_query($sql, $bindings, false);
         $c = (int) $this->connection->affected_rows;
@@ -91,7 +91,7 @@ class MysqlConnection implements DbConnectionInterface
     /**
      * {@inheritdoc}
      */
-    public function each($sql, $bindings = [], callable $callback)
+    public function each($sql, callable $callback, array $bindings = [])
     {
         $result = $this->_query($sql, $bindings);
 
