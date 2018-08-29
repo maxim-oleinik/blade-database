@@ -5,41 +5,46 @@ Blade Database Adapter
 
 Install
 -------
-1. Add to `composer.json`
+1. Add to `composer`
+    ```
+        composer require blade/database
+    ```
 
 2. Implement `\Blade\Database\DbConnectionInterface`  
 Реализовать "мост" между своим коннектом к базе и этим Адаптером
-```
-    class MyDbConnection implements \Blade\Database\DbConnectionInterface
-    {
-        ->execute($sql, $bindings = []): int;
-        ->each($sql, $bindings = [], callable $callback);
-        ->escape($value): string
-        ->beginTransaction();
-        ->commit();
-        ->rollBack();
-    }
-```
-Или использовать готовый:
-```
-    // PDO
-    $dsn = sprintf('mysql:host=%s;port=%d;dbname=%s', $host, $port, $dbName);
-    $connection = new \Blade\Database\Connection\PdoConnection($dsn, $user, $pass, [
-        \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_EXCEPTION,
-        \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
-    ]);
-
-    // PostgreSQL (pgsql)
-    $dsn = sprintf('host=%s port=%d dbname=%s user=%s password=%s',
-        $host, $port, $dbName, $user, $pass
-    );
-    $connection = new \Blade\Database\Connection\PostgresConnection($dsn, PGSQL_CONNECT_FORCE_NEW);
-
-    // MySQL (mysqli)
-    $connection = new \Blade\Database\Connection\MysqlConnection(
-        $host, $user, $pass, $dbName, $port
-    );
-```
+    ```
+        class MyDbConnection implements \Blade\Database\DbConnectionInterface
+        {
+            ->execute($sql, $bindings = []): int;
+            ->each($sql, callable $callback, $bindings = []);
+            ->escape($value): string
+            ->beginTransaction();
+            ->commit();
+            ->rollBack();
+        }
+    ```
+    Или использовать готовый:
+    ```
+        // PDO
+        $dsn = sprintf('mysql:host=%s;port=%d;dbname=%s', $host, $port, $dbName);
+        $connection = new \Blade\Database\Connection\PdoConnection($dsn, $user, $pass, [
+            \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_EXCEPTION,
+            \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
+        ]);
+    ```
+    ```
+        // PostgreSQL (pgsql)
+        $dsn = sprintf('host=%s port=%d dbname=%s user=%s password=%s',
+            $host, $port, $dbName, $user, $pass
+        );
+        $connection = new \Blade\Database\Connection\PostgresConnection($dsn, PGSQL_CONNECT_FORCE_NEW);
+    ```
+    ```
+        // MySQL (mysqli)
+        $connection = new \Blade\Database\Connection\MysqlConnection(
+            $host, $user, $pass, $dbName, $port
+        );
+    ```
 
 
 DbAdapter
@@ -73,6 +78,9 @@ SqlBuilder
     \Blade\Database\Sql\SqlBuilder::setEscapeMethod(function($value) {
         return pg_escape_string($value);
     });
+
+    // или
+    \Blade\Database\Sql\SqlBuilder::setEscapeMethod([$connection, 'escape']);
 ```
 
 ####Select
