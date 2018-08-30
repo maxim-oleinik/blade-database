@@ -73,7 +73,7 @@ DbAdapter
 
 SqlBuilder
 ----------
-####Настройка
+### Настройка
 ```
     \Blade\Database\Sql\SqlBuilder::setEscapeMethod(function($value) {
         return pg_escape_string($value);
@@ -83,7 +83,7 @@ SqlBuilder
     \Blade\Database\Sql\SqlBuilder::setEscapeMethod([$connection, 'escape']);
 ```
 
-####Select
+### Select
 ```
     $sql = SqlBuilder::make('comment label')
         ->select("id, code, sum(code) as codes")
@@ -137,7 +137,7 @@ SqlBuilder
         ->exists(); // 1, если записи существуют
 ```
 
-####Insert
+### Insert
 ```
     SqlBuilder::make()
         ->insert("my_table")
@@ -164,7 +164,7 @@ SqlBuilder
         ]);
 ```
 
-####Update
+### Update
 ```
     SqlBuilder::make()
         ->update("my_table")
@@ -175,7 +175,7 @@ SqlBuilder
         ]);
 ```
 
-####Delete
+### Delete
 ```
     SqlBuilder::make()
         ->delete("my_table")
