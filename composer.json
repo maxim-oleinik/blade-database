@@ -1,5 +1,5 @@
 {
-  "name": "blade/database",
+  "name": "maxim-oleinik/blade-database",
   "type": "library",
   "description": "PHP Database interface library",
   "license": "MIT",
