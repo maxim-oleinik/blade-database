@@ -94,7 +94,7 @@ SqlBuilder
         ->addJoin("LEFT JOIN authors AS a ON (a.id=t.author_id)")
 
         ->andWhere("t.id = %d", 123)
-        ->andWhere("a.name > '%s'", 'some text')
+        ->andWhere("a.name > '%s'", 'some text') // sprintf escaped values
         ->andWhereIn("t.code", [1,2,3])
         ->andWhereNotIn("t.code", [4,5])
 
@@ -138,6 +138,8 @@ SqlBuilder
     SqlBuilder::make()
         ->from("my_table")
         ->count($fields = '*');
+
+    // SELECT count(*) FROM my_table
 ```
 **exists() = SELECT 1**
 ```
@@ -170,6 +172,8 @@ SqlBuilder
             'name' => 'some text',
         ])
         ->returning('id, code');
+
+    // INSERT INTO my_table (code, name) VALUES (5, 'some text') RETURNING id, code
 ```
 **Вставка нескольких строк**
 ```
@@ -186,6 +190,8 @@ SqlBuilder
                 'name' => 'some text',
             ],
         ]);
+
+    // INSERT INTO my_table (code, name) VALUES (5, 'some text'), (6, 'some text')
 ```
 
 ### Update
@@ -197,11 +203,15 @@ SqlBuilder
             'code' => 5,
             'name' => 'some text',
         ]);
+
+    // UPDATE my_table SET code=5, name='some text' WHERE id = 123
 ```
 
 ### Delete
 ```
     SqlBuilder::make()
         ->delete("my_table")
-        ->andWhere("id = %d", 123)
+        ->andWhere("id = %d", 123);
+
+    // DELETE FROM my_table WHERE id = 123
 ```
