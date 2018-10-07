@@ -1,5 +1,7 @@
 Blade Database Adapter
 ======================
+[![Latest Stable Version](https://poser.pugx.org/maxim-oleinik/blade-database/v/stable)](https://packagist.org/packages/maxim-oleinik/blade-database)
+
 
 Универсальный адаптер к любому уже реализованному коннекту к БД.
 
