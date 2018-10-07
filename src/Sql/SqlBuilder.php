@@ -547,6 +547,11 @@ class SqlBuilder
             $label = sprintf("/*%s*/\n", $this->label);
         }
 
+        // Проверка что явно указан SELECT, когда используется JOIN
+        if (!$this->select && $this->join) {
+            throw new \LogicException('SELECT statement MUST be set with select() method if JOIN is used. '.$this->label);
+        }
+
         $select = '*';
         if ($this->select) {
             $select = implode(', ', $this->select);

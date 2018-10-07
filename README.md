@@ -113,6 +113,8 @@ SqlBuilder
     // Raw SQL join
     $sql = SqlBuilder::make()
         ->addJoin("LEFT JOIN authors AS a ON (a.id=t.author_id)")
+        // !!! при использовании join() - обязательно явно указывать select()
+        ->select('t.*, a.id')
         ->andWhere("a.name > '%s'", 'some text');
 ```
 
@@ -127,6 +129,8 @@ SqlBuilder
         ->rightJoin($sqlAuthors)
         // Универсальный метод
         ->join('FULL OUTER JOIN', $sqlAuthors, 'ON (...)')
+        // !!! при использовании join() - обязательно явно указывать select()
+        ->select('t.*')
 ```
 
 **Подстановка count()**
