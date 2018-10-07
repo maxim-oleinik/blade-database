@@ -25,10 +25,10 @@ class SqlBuilderTest extends \PHPUnit_Framework_TestCase
     public function testLabel()
     {
         $sql = $this->_sql($label = "abc");
-        $this->assertEquals("/*{$label}*/\nSELECT *\nFROM ".$this->table, (string)$sql);
+        $this->assertEquals("/*{$label}*/\nSELECT *\nFROM ".$this->table, $sql->toSql());
 
         $sql->setLabel($label = __METHOD__);
-        $this->assertEquals("/*{$label}*/\nSELECT *\nFROM ".$this->table, (string)$sql);
+        $this->assertEquals("/*{$label}*/\nSELECT *\nFROM ".$this->table, $sql->toSql());
     }
 
 
@@ -40,7 +40,7 @@ class SqlBuilderTest extends \PHPUnit_Framework_TestCase
         $sql = (new SqlBuilder)
             ->from($this->table, 't');
 
-        $this->assertEquals("SELECT *\nFROM {$this->table} AS t", (string)$sql);
+        $this->assertEquals("SELECT *\nFROM {$this->table} AS t", $sql->toSql());
     }
 
 
@@ -52,10 +52,10 @@ class SqlBuilderTest extends \PHPUnit_Framework_TestCase
         $sql = $this->_sql()
             ->addSelect('col1, col2')
             ->addSelect('col3');
-        $this->assertEquals("SELECT col1, col2, col3\nFROM ".$this->table, (string)$sql);
+        $this->assertEquals("SELECT col1, col2, col3\nFROM ".$this->table, $sql->toSql());
 
         $sql->select('col');
-        $this->assertEquals("SELECT col\nFROM ".$this->table, (string)$sql);
+        $this->assertEquals("SELECT col\nFROM ".$this->table, $sql->toSql());
     }
 
 
@@ -67,21 +67,21 @@ class SqlBuilderTest extends \PHPUnit_Framework_TestCase
         $sql = $this->_sql();
         $sql->andWhere($a = 'col1=123');
         $sql->andWhere($b = 'col2="123" AND col3=4');
-        $this->assertEquals("SELECT *\nFROM {$this->table}\nWHERE {$a} AND {$b}", (string)$sql);
+        $this->assertEquals("SELECT *\nFROM {$this->table}\nWHERE {$a} AND {$b}", $sql->toSql());
     }
 
     public function testWhereIn()
     {
         $sql = $this->_sql();
         $sql->andWhereIn('col', ['a', "'b"]);
-        $this->assertEquals("SELECT *\nFROM {$this->table}\nWHERE col IN ('a', '''b')", (string)$sql);
+        $this->assertEquals("SELECT *\nFROM {$this->table}\nWHERE col IN ('a', '''b')", $sql->toSql());
     }
 
     public function testWhereNotIn()
     {
         $sql = $this->_sql();
         $sql->andWhereNotIn('col', [1,2]);
-        $this->assertEquals("SELECT *\nFROM {$this->table}\nWHERE col NOT IN ('1', '2')", (string)$sql);
+        $this->assertEquals("SELECT *\nFROM {$this->table}\nWHERE col NOT IN ('1', '2')", $sql->toSql());
     }
 
     public function testWhereSprintf()
@@ -89,7 +89,7 @@ class SqlBuilderTest extends \PHPUnit_Framework_TestCase
         $sql = $this->_sql();
         $sql->andWhere("colA=%d AND colC='%s'", $a='21.21', 'text');
         $sql->andWhere("colB='%s'", $b="'B\"");
-        $this->assertEquals("SELECT *\nFROM {$this->table}\nWHERE colA=21 AND colC='text' AND colB='''B\"'", (string)$sql);
+        $this->assertEquals("SELECT *\nFROM {$this->table}\nWHERE colA=21 AND colC='text' AND colB='''B\"'", $sql->toSql());
     }
 
     public function testOrWhere()
@@ -97,7 +97,7 @@ class SqlBuilderTest extends \PHPUnit_Framework_TestCase
         $sql = $this->_sql();
         $sql->andWhere($a = 'colA=123');
         $sql->orWhere($b='colB=%d AND col3=4', $bVal = 21);
-        $this->assertEquals("SELECT *\nFROM {$this->table}\nWHERE {$a} OR ".sprintf($b, $bVal), (string)$sql);
+        $this->assertEquals("SELECT *\nFROM {$this->table}\nWHERE {$a} OR ".sprintf($b, $bVal), $sql->toSql());
     }
 
     public function testFirstOrException()
@@ -116,7 +116,7 @@ class SqlBuilderTest extends \PHPUnit_Framework_TestCase
         $sql = $this->_sql();
         $sql->addOrder($a = 'col1');
         $sql->addOrder($b = 'col2 DESC');
-        $this->assertEquals("SELECT *\nFROM {$this->table}\nORDER BY {$a}, {$b}", (string)$sql);
+        $this->assertEquals("SELECT *\nFROM {$this->table}\nORDER BY {$a}, {$b}", $sql->toSql());
     }
 
 
@@ -127,7 +127,7 @@ class SqlBuilderTest extends \PHPUnit_Framework_TestCase
     {
         $sql = $this->_sql();
         $sql->limit(10);
-        $this->assertEquals("SELECT *\nFROM {$this->table}\nLIMIT 10", (string)$sql);
+        $this->assertEquals("SELECT *\nFROM {$this->table}\nLIMIT 10", $sql->toSql());
     }
 
 
@@ -139,7 +139,7 @@ class SqlBuilderTest extends \PHPUnit_Framework_TestCase
         $sql = $this->_sql()
             ->addJoin($t2 = 'INNER JOIN table2 AS t2 USING (col)')
             ->addJoin($t3 = 'LEFT JOIN table3 AS t3 USING (col)');
-        $this->assertEquals("SELECT *\nFROM {$this->table}\n{$t2}\n{$t3}", (string)$sql);
+        $this->assertEquals("SELECT *\nFROM {$this->table}\n{$t2}\n{$t3}", $sql->toSql());
     }
 
     /**
@@ -161,7 +161,7 @@ class SqlBuilderTest extends \PHPUnit_Framework_TestCase
             "INNER JOIN table2 AS t2 ON t2.id=t1.id\n" .
             "LEFT JOIN table2 AS t2 ON t2.col=t1.col\n" .
             "RIGHT JOIN table2 AS t2\n".
-            "WHERE t2.col=123 AND t2.col=123 AND t2.col=123 AND t1.col=55", (string)$sql);
+            "WHERE t2.col=123 AND t2.col=123 AND t2.col=123 AND t1.col=55", $sql->toSql());
     }
 
 
@@ -189,7 +189,7 @@ class SqlBuilderTest extends \PHPUnit_Framework_TestCase
             "GROUP BY {$groupBy}".PHP_EOL.
             "HAVING {$having}".PHP_EOL.
             "ORDER BY {$order}".PHP_EOL.
-            "LIMIT 10 OFFSET 2", (string)$sql);
+            "LIMIT 10 OFFSET 2", $sql->toSql());
     }
 
     public function testCountWithGroupBy()
@@ -208,7 +208,7 @@ class SqlBuilderTest extends \PHPUnit_Framework_TestCase
             "FROM contacts".PHP_EOL.
             "GROUP BY status".PHP_EOL.
             "HAVING 1=1) AS {$alias}",
-            (string)$sql);
+            $sql->toSql());
     }
 
 
@@ -225,7 +225,7 @@ class SqlBuilderTest extends \PHPUnit_Framework_TestCase
                 'col_bool' => false,
                 'col_null' => null,
             ]);
-        $this->assertEquals(sprintf("INSERT INTO {$this->table} (%s) VALUES (23, 1.56, 'val''/*', 0, NULL)", implode(', ', array_keys($values))), (string)$sql);
+        $this->assertEquals(sprintf("INSERT INTO {$this->table} (%s) VALUES (23, 1.56, 'val''/*', 0, NULL)", implode(', ', array_keys($values))), $sql->toSql());
     }
 
     /**
@@ -242,7 +242,7 @@ class SqlBuilderTest extends \PHPUnit_Framework_TestCase
                 'id' => 2,
                 'name' => 'name2',
             ]]);
-        $this->assertEquals("INSERT INTO {$this->table} (id, name) VALUES (1, 'name1'), (2, 'name2')", (string)$sql);
+        $this->assertEquals("INSERT INTO {$this->table} (id, name) VALUES (1, 'name1'), (2, 'name2')", $sql->toSql());
     }
 
 
@@ -254,7 +254,7 @@ class SqlBuilderTest extends \PHPUnit_Framework_TestCase
         $sql = (new SqlBuilder())->from($this->table)->insert()
             ->values(['col' => 23])
             ->returning($sqlPart = 'any sql part');
-        $this->assertEquals("INSERT INTO {$this->table} (col) VALUES (23) RETURNING ".$sqlPart, (string)$sql);
+        $this->assertEquals("INSERT INTO {$this->table} (col) VALUES (23) RETURNING ".$sqlPart, $sql->toSql());
     }
 
 
@@ -272,6 +272,6 @@ class SqlBuilderTest extends \PHPUnit_Framework_TestCase
                 'col_bool' => true,
                 'col_null' => null,
             ]);
-        $this->assertEquals("UPDATE {$this->table} SET col_int=23, col_float=1.56, col_str='val''/*', col_bool=1, col_null=NULL\nWHERE colA=1", (string)$sql);
+        $this->assertEquals("UPDATE {$this->table} SET col_int=23, col_float=1.56, col_str='val''/*', col_bool=1, col_null=NULL\nWHERE colA=1", $sql->toSql());
     }
 }

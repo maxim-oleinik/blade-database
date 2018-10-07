@@ -515,7 +515,7 @@ class SqlBuilder
      *
      * @return string
      */
-    public function __toString()
+    public function toSql()
     {
         if ($this->isInsert) {
             return $this->_toInsert();
@@ -526,6 +526,14 @@ class SqlBuilder
         } else {
             return $this->_toSelect();
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->toSql();
     }
 
 
