@@ -9,7 +9,7 @@ Install
 -------
 1. Add to `composer`
     ```
-        composer require blade/database
+        composer require maxim-oleinik/blade-database
     ```
 
 2. Implement `\Blade\Database\DbConnectionInterface`  
