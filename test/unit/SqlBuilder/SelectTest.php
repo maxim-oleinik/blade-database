@@ -1,7 +1,5 @@
 <?php namespace Blade\Database\Test\Unit\SqlBuilder;
 
-use Blade\Database\Sql\SqlBuilder;
-
 /**
  * @see \Blade\Database\Sql\SqlBuilder
  */

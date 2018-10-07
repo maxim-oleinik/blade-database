@@ -647,9 +647,18 @@ class SqlBuilder
         return sprintf('DELETE FROM %s'.$this->buildWhere(), $this->buildFrom());
     }
 
+
+    /**
+     * FROM
+     *
+     * @return string - SQL part FROM
+     */
     public function buildFrom()
     {
         $from = $this->getTableName();
+        if ($from instanceof self) {
+            $from = "({$from})";
+        }
         if ($this->getFromAlias()) {
             $from .= ' AS ' . $this->getFromAlias();
             return $from;

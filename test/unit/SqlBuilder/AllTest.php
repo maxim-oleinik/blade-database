@@ -27,10 +27,23 @@ class AllTest extends \PHPUnit_Framework_TestCase
      */
     public function testFrom()
     {
-        $sql = (new SqlBuilder)
+        $sql = $this->sql()
             ->from($this->table, 't');
 
         $this->assertEquals("SELECT *\nFROM {$this->table} AS t", $sql->toSql());
+    }
+
+
+    /**
+     * FROM SELECT
+     */
+    public function testFromSelect()
+    {
+        $sql = $this->sql()
+            ->select('id')
+            ->from($this->sql()->from('some_table', 't'), 't1');
+
+        $this->assertEquals("SELECT id\nFROM (SELECT *\nFROM some_table AS t) AS t1", $sql->toSql());
     }
 
 

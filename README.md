@@ -143,7 +143,22 @@ SqlBuilder
 ```
     SqlBuilder::make('comment label')
         ->from("my_table")
+        ->andWhere('...')
         ->exists(); // 1, если записи существуют
+
+    // SELECT 1 FROM my_table WHERE ... LIMIT 1
+```
+**SELECT FROM (SELECT ...)**
+```
+    $subSql = SqlBuilder::make()
+        ->from("some_tabe")
+        ->andWhere('...')
+
+    SqlBuilder::make()
+        ->select('t.id')
+        ->from($subSql, 't')
+
+    // SELECT t.id FROM (SELECT * FROM some_tabe WHERE ...) AS t
 ```
 
 ### Insert
