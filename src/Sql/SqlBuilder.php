@@ -236,10 +236,13 @@ class SqlBuilder
     }
 
 
+    // JOIN
+    // ------------------------------------------------------------------------
+
     /**
-     * JOIN
+     * JOIN - raw SQL
      *
-     * @param  string $cond
+     * @param  string $cond - например: "LEFT JOIN some_table AS t ON (t.id=o.id)"
      * @return $this
      */
     public function addJoin($cond)
@@ -248,33 +251,59 @@ class SqlBuilder
         return $this;
     }
 
-    public function innerJoin(SqlBuilder $sql, $condition = null)
+    /**
+     * JOIN - with SqlBuilder
+     *
+     * @param string     $type      - "LEFT JOIN", "INNER JOIN"
+     * @param SqlBuilder $sql
+     * @param string     $condition - "ON (a.id=t.id)"
+     * @return $this
+     */
+    public function join($type, SqlBuilder $sql, $condition)
     {
-        return $this->_join('INNER', $sql, $condition);
-    }
-
-    public function leftJoin(SqlBuilder $sql, $condition = null)
-    {
-        return $this->_join('LEFT', $sql, $condition);
-    }
-
-    public function rightJoin(SqlBuilder $sql, $condition = null)
-    {
-        return $this->_join('RIGHT', $sql, $condition);
-    }
-
-    private function _join($type, SqlBuilder $sql, $condition)
-    {
-        $this->addJoin(trim($type . ' JOIN ' . $sql->buildFrom() . ' ' . $condition));
+        $this->addJoin(trim($type . ' ' . $sql->buildFrom() . ' ' . $condition));
         $this->andWhere($sql->buildWhere(true));
         return $this;
     }
 
+    /**
+     * @param SqlBuilder $sql
+     * @param string     $condition
+     * @return $this
+     */
+    public function innerJoin(SqlBuilder $sql, $condition = null)
+    {
+        return $this->join('INNER JOIN', $sql, $condition);
+    }
+
+    /**
+     * @param SqlBuilder $sql
+     * @param string     $condition
+     * @return $this
+     */
+    public function leftJoin(SqlBuilder $sql, $condition = null)
+    {
+        return $this->join('LEFT JOIN', $sql, $condition);
+    }
+
+    /**
+     * @param SqlBuilder $sql
+     * @param string     $condition
+     * @return $this
+     */
+    public function rightJoin(SqlBuilder $sql, $condition = null)
+    {
+        return $this->join('RIGHT JOIN', $sql, $condition);
+    }
+
+
+    // SELECT
+    // ------------------------------------------------------------------------
 
     /**
      * SELECT
      *
-     * @param $cols
+     * @param  string $cols
      * @return $this
      */
     public function select($cols)

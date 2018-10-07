@@ -110,10 +110,13 @@ SqlBuilder
 
 **Join**
 ```
+    // Raw SQL join
     $sql = SqlBuilder::make()
         ->addJoin("LEFT JOIN authors AS a ON (a.id=t.author_id)")
         ->andWhere("a.name > '%s'", 'some text');
+```
 
+```
     // Объединение 2ух запросов в Join
     $sqlAuthors = SqlBuilder::make()->from('authors', 'a')
         ->andWhere("a.name > '%s'", 'some text');
@@ -122,6 +125,8 @@ SqlBuilder
         ->innerJoin($sqlAuthors, 'ON (a.id=t.author_id)')
         ->leftJoin($sqlAuthors, 'USING author_id')
         ->rightJoin($sqlAuthors)
+        // Универсальный метод
+        ->join('FULL OUTER JOIN', $sqlAuthors, 'ON (...)')
 ```
 
 **Подстановка count()**
