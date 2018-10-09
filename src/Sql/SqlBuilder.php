@@ -434,30 +434,40 @@ class SqlBuilder
     /**
      * WHERE IN ()
      *
-     * @param string $field
-     * @param array  $values
+     * @param string           $field
+     * @param array|SqlBuilder $values
+     * @param bool             $equals
      * @return $this
      */
-    public function andWhereIn($field, array $values, $equals = true)
+    public function andWhereIn($field, $values, $equals = true)
     {
         if (!$values) {
             throw new \InvalidArgumentException(__METHOD__.": Expected not emplty list");
         }
 
-        $values = array_map(self::$escapeMethod, $values);
-        $this->andWhere(sprintf("%s%s IN ('%s')", $field, $equals?'':' NOT', implode("', '", $values)));
+        if (is_array($values)) {
+            $values = sprintf("'%s'", implode("', '", array_map(self::$escapeMethod, $values)));
+
+        } elseif (!$values instanceof self) {
+            throw new \InvalidArgumentException(__METHOD__.": Expected Array or ".__CLASS__." instance");
+        }
+
+        $this->andWhere(sprintf("%s%s IN (%s)", $field, $equals?'':' NOT', $values));
         return $this;
     }
 
     /**
      * WHERE NOT IN
      *
+     * @param string           $field
+     * @param array|SqlBuilder $values
      * @return $this
      */
-    public function andWhereNotIn($field, array $values)
+    public function andWhereNotIn($field, $values)
     {
         return $this->andWhereIn($field, $values, false);
     }
+
 
     /**
      * ORDER BY
