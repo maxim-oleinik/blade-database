@@ -1,7 +1,5 @@
 <?php namespace Blade\Database\Test\Unit\SqlBuilder;
 
-use Blade\Database\Sql\SqlBuilder;
-
 /**
  * @see \Blade\Database\Sql\SqlBuilder
  */
@@ -15,10 +13,10 @@ class AllTest extends \PHPUnit_Framework_TestCase
     public function testLabel()
     {
         $sql = $this->sql($label = "abc");
-        $this->assertEquals("/*{$label}*/\nSELECT *\nFROM ".$this->table, $sql->toSql());
+        $this->assertEquals("/*{$label}*/\nSELECT *\nFROM {$this->table} AS t", $sql->toSql());
 
         $sql->setLabel($label = __METHOD__);
-        $this->assertEquals("/*{$label}*/\nSELECT *\nFROM ".$this->table, $sql->toSql());
+        $this->assertEquals("/*{$label}*/\nSELECT *\nFROM {$this->table} AS t", $sql->toSql());
     }
 
 
@@ -28,9 +26,9 @@ class AllTest extends \PHPUnit_Framework_TestCase
     public function testFrom()
     {
         $sql = $this->sql()
-            ->from($this->table, 't');
+            ->from($this->table, 't1');
 
-        $this->assertEquals("SELECT *\nFROM {$this->table} AS t", $sql->toSql());
+        $this->assertEquals("SELECT *\nFROM {$this->table} AS t1", $sql->toSql());
     }
 
 
@@ -55,7 +53,7 @@ class AllTest extends \PHPUnit_Framework_TestCase
         $sql = $this->sql();
         $sql->addOrder($a = 'col1');
         $sql->addOrder($b = 'col2 DESC');
-        $this->assertEquals("SELECT *\nFROM {$this->table}\nORDER BY {$a}, {$b}", $sql->toSql());
+        $this->assertEquals("SELECT *\nFROM {$this->table} AS t\nORDER BY {$a}, {$b}", $sql->toSql());
     }
 
 
@@ -66,7 +64,7 @@ class AllTest extends \PHPUnit_Framework_TestCase
     {
         $sql = $this->sql();
         $sql->limit(10);
-        $this->assertEquals("SELECT *\nFROM {$this->table}\nLIMIT 10", $sql->toSql());
+        $this->assertEquals("SELECT *\nFROM {$this->table} AS t\nLIMIT 10", $sql->toSql());
     }
 
 

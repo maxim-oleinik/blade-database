@@ -12,6 +12,6 @@ trait TestSqlTrait
      */
     public function sql($label = null)
     {
-        return (new SqlBuilder($label))->from($this->table);
+        return (new SqlBuilder($label))->from($this->table, 't');
     }
 }

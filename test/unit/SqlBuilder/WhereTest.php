@@ -15,8 +15,19 @@ class WhereTest extends \PHPUnit_Framework_TestCase
         $sql = $this->sql();
         $sql->andWhere($a = 'col1=123');
         $sql->andWhere($b = 'col2="123" AND col3=4');
-        $this->assertEquals("SELECT *\nFROM {$this->table}\nWHERE {$a} AND {$b}", $sql->toSql());
+        $this->assertEquals("SELECT *\nFROM {$this->table} AS t\nWHERE {$a} AND {$b}", $sql->toSql());
     }
+
+
+    /**
+     * WHERE Equals
+     *
+    public function testWhereEquals()
+    {
+        $sql = $this->sql();
+        $sql->andWhereEquals('col1', 'text');
+        $this->assertEquals("SELECT *\nFROM {$this->table}\nWHERE {$a} AND {$b}", $sql->toSql());
+    } */
 
 
     /**
@@ -26,7 +37,7 @@ class WhereTest extends \PHPUnit_Framework_TestCase
     {
         $sql = $this->sql();
         $sql->andWhereIn('col', ['a', "'b"]);
-        $this->assertEquals("SELECT *\nFROM {$this->table}\nWHERE col IN ('a', '''b')", $sql->toSql());
+        $this->assertEquals("SELECT *\nFROM {$this->table} AS t\nWHERE t.col IN ('a', '''b')", $sql->toSql());
     }
 
 
@@ -37,7 +48,7 @@ class WhereTest extends \PHPUnit_Framework_TestCase
     {
         $sql = $this->sql();
         $sql->andWhereNotIn('col', [1,2]);
-        $this->assertEquals("SELECT *\nFROM {$this->table}\nWHERE col NOT IN ('1', '2')", $sql->toSql());
+        $this->assertEquals("SELECT *\nFROM {$this->table} AS t\nWHERE t.col NOT IN ('1', '2')", $sql->toSql());
     }
 
     /**
@@ -48,7 +59,7 @@ class WhereTest extends \PHPUnit_Framework_TestCase
         $sql = $this->sql();
         $sql->andWhere("colA=%d AND colC='%s'", $a = '21.21', 'text');
         $sql->andWhere("colB='%s'", $b = "'B\"");
-        $this->assertEquals("SELECT *\nFROM {$this->table}\nWHERE colA=21 AND colC='text' AND colB='''B\"'", $sql->toSql());
+        $this->assertEquals("SELECT *\nFROM {$this->table} AS t\nWHERE colA=21 AND colC='text' AND colB='''B\"'", $sql->toSql());
     }
 
 
@@ -60,7 +71,7 @@ class WhereTest extends \PHPUnit_Framework_TestCase
         $sql = $this->sql();
         $sql->andWhere($a = 'colA=123');
         $sql->orWhere($b = 'colB=%d AND col3=4', $bVal = 21);
-        $this->assertEquals("SELECT *\nFROM {$this->table}\nWHERE {$a} OR " . sprintf($b, $bVal), $sql->toSql());
+        $this->assertEquals("SELECT *\nFROM {$this->table} AS t\nWHERE {$a} OR " . sprintf($b, $bVal), $sql->toSql());
     }
 
     /**

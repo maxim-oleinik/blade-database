@@ -19,7 +19,7 @@ class JoinTest extends \PHPUnit_Framework_TestCase
             ->select('t2.*')
             ->addJoin($t2 = 'INNER JOIN table2 AS t2 USING (col)')
             ->addJoin($t3 = 'LEFT JOIN table3 AS t3 USING (col)');
-        $this->assertEquals("SELECT t2.*\nFROM {$this->table}\n{$t2}\n{$t3}", $sql->toSql());
+        $this->assertEquals("SELECT t2.*\nFROM {$this->table} AS t\n{$t2}\n{$t3}", $sql->toSql());
     }
 
     /**

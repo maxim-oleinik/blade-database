@@ -15,10 +15,10 @@ class SelectTest extends \PHPUnit_Framework_TestCase
         $sql = $this->sql()
             ->addSelect('col1, col2')
             ->addSelect('col3');
-        $this->assertEquals("SELECT col1, col2, col3\nFROM ".$this->table, $sql->toSql());
+        $this->assertEquals("SELECT col1, col2, col3\nFROM {$this->table} AS t", $sql->toSql());
 
         $sql->select('col');
-        $this->assertEquals("SELECT col\nFROM ".$this->table, $sql->toSql());
+        $this->assertEquals("SELECT col\nFROM {$this->table} AS t", $sql->toSql());
     }
 
 
