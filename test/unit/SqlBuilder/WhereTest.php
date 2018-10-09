@@ -1,5 +1,7 @@
 <?php namespace Blade\Database\Test\Unit\SqlBuilder;
 
+use Blade\Database\Sql\SqlBuilder;
+
 /**
  * @see \Blade\Database\Sql\SqlBuilder
  */
@@ -21,13 +23,13 @@ class WhereTest extends \PHPUnit_Framework_TestCase
 
     /**
      * WHERE Equals
-     *
+     */
     public function testWhereEquals()
     {
         $sql = $this->sql();
         $sql->andWhereEquals('col1', 'text');
-        $this->assertEquals("SELECT *\nFROM {$this->table}\nWHERE {$a} AND {$b}", $sql->toSql());
-    } */
+        $this->assertEquals("SELECT *\nFROM {$this->table} AS t\nWHERE col1='text'", $sql->toSql());
+    }
 
 
     /**

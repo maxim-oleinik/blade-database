@@ -86,6 +86,7 @@ SqlBuilder
 ```
 
 ### Select
+Автоматическое экранирование значений производится в where-условиях
 ```
     $sql = SqlBuilder::make('comment label')
         ->select("id, code, sum(code) as codes")
@@ -96,6 +97,7 @@ SqlBuilder
         ->addJoin("LEFT JOIN authors AS a ON (a.id=t.author_id)")
 
         ->andWhere("t.id = %d", 123)
+        ->andWhereEquals("t.id", 123)
         ->andWhere("a.name > '%s'", 'some text') // sprintf escaped values
         ->andWhereIn("t.code", [1,2,3])
         ->andWhereNotIn("t.code", [4,5])

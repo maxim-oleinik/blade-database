@@ -353,7 +353,7 @@ class SqlBuilder
      * Подставить значение колонки с алиасом таблицы
      *
      * @param string|array $column
-     * @param string $tableAlias
+     * @param string       $tableAlias
      * @return string
      */
     public function col($column, $tableAlias = null)
@@ -371,6 +371,9 @@ class SqlBuilder
         return implode(', ', $cols);
     }
 
+
+    // WHERE
+    // ------------------------------------------------------------------------
 
     /**
      * WHERE
@@ -416,6 +419,17 @@ class SqlBuilder
         return $this;
     }
 
+    /**
+     * AND-условие на равенство
+     *
+     * @param string $column
+     * @param string $value
+     * @return $this
+     */
+    public function andWhereEquals($column, $value)
+    {
+        return $this->andWhere($column . "='%s'", $value);
+    }
 
     /**
      * WHERE IN ()
