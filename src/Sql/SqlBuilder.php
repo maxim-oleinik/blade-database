@@ -428,7 +428,11 @@ class SqlBuilder
      */
     public function andWhereEquals($column, $value)
     {
-        return $this->andWhere($column . "='%s'", $value);
+        if (null === $value) {
+            return $this->andWhere($column . " IS NULL");
+        } else {
+            return $this->andWhere($column . "='%s'", $value);
+        }
     }
 
     /**

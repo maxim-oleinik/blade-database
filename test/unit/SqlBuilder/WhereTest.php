@@ -29,6 +29,14 @@ class WhereTest extends \PHPUnit_Framework_TestCase
         $sql = $this->sql();
         $sql->andWhereEquals('col1', 'text');
         $this->assertEquals("SELECT *\nFROM {$this->table} AS t\nWHERE col1='text'", $sql->toSql());
+
+        $sql = $this->sql();
+        $sql->andWhereEquals('col1', '');
+        $this->assertEquals("SELECT *\nFROM {$this->table} AS t\nWHERE col1=''", $sql->toSql());
+
+        $sql = $this->sql();
+        $sql->andWhereEquals('col1', null);
+        $this->assertEquals("SELECT *\nFROM {$this->table} AS t\nWHERE col1 IS NULL", $sql->toSql());
     }
 
 
