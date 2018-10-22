@@ -262,7 +262,9 @@ class SqlBuilder
     public function join($type, SqlBuilder $sql, $condition)
     {
         $this->addJoin(trim($type . ' ' . $sql->buildFrom() . ' ' . $condition));
-        $this->andWhere($sql->buildWhere(true));
+        if ($where = $sql->buildWhere(true)) {
+            $this->andWhere($where);
+        }
         return $this;
     }
 

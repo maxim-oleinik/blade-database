@@ -46,6 +46,25 @@ class JoinTest extends \PHPUnit_Framework_TestCase
             "WHERE t2.col=123 AND t2.col=123 AND t2.col=123 AND t1.col=55", $sql->toSql());
     }
 
+
+    /**
+     * JOIN без условий WHERE
+     */
+    public function testJoinWithoutWhere()
+    {
+        $sql2 = SqlBuilder::make('some label should be ignored')
+            ->from('table2', 't2')
+            ->select('*')
+            ->andWhere('t2.col=123');
+
+        $sql = $this->sql()->setFromAlias('t1')
+            ->select('*')
+            ->innerJoin(SqlBuilder::make()->from('table2', 't2'));
+
+        $this->assertEquals("SELECT *\nFROM {$this->table} AS t1\nINNER JOIN table2 AS t2", $sql->toSql());
+    }
+
+
     /**
      * JOIN - Exception if no SELECT
      */
