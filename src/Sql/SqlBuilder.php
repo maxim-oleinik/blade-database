@@ -424,15 +424,28 @@ class SqlBuilder
      *
      * @param string $column
      * @param string $value
+     * @param bool   $equals - равенство/не-равенство
      * @return $this
      */
-    public function andWhereEquals($column, $value)
+    public function andWhereEquals($column, $value, $equals = true)
     {
         if (null === $value) {
-            return $this->andWhere($column . " IS NULL");
+            $operator = $equals ? '' : 'NOT ';
+            return $this->andWhere($column . " IS {$operator}NULL");
         } else {
-            return $this->andWhere($column . "='%s'", $value);
+            $operator = $equals ? '=' : '<>';
+            return $this->andWhere($column . $operator . "'%s'", $value);
         }
+    }
+
+    /**
+     * @param string $column
+     * @param string $value
+     * @return $this
+     */
+    public function andWhereNotEquals($column, $value)
+    {
+        return $this->andWhereEquals($column, $value, false);
     }
 
     /**
