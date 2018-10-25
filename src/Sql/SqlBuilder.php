@@ -29,6 +29,8 @@ class SqlBuilder
     private $isUpdate = false;
     private $isDelete = false;
     private $returnig;
+    private $onConflictObject;
+    private $onConflictAction;
     private $values = [];
 
 
@@ -157,6 +159,20 @@ class SqlBuilder
             $this->tableName = $table;
         }
         $this->isDelete = true;
+        return $this;
+    }
+
+
+    /**
+     * ON CONFLICT NO NOTHING
+     *
+     * @param  string $conflictObject
+     * @return self
+     */
+    public function onConflictDoNothing($conflictObject = null): self
+    {
+        $this->onConflictObject = $conflictObject;
+        $this->onConflictAction = 'DO NOTHING';
         return $this;
     }
 
@@ -652,6 +668,13 @@ class SqlBuilder
         }
 
         $sql = sprintf('INSERT INTO %s (%s) VALUES (%s)', $this->getTableName(), implode(', ', $columns), implode('), (', $rows));
+
+        if ($this->onConflictAction) {
+            $sql .= sprintf(' ON CONFLICT%s %s',
+                $this->onConflictObject ? " ({$this->onConflictObject})" : null,
+                $this->onConflictAction
+            );
+        }
 
         if ($this->returnig) {
             $sql .= ' RETURNING ' . $this->returnig;

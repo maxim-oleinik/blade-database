@@ -54,4 +54,24 @@ class InsertTest extends \PHPUnit_Framework_TestCase
             ->returning($sqlPart = 'any sql part');
         $this->assertEquals("INSERT INTO {$this->table} (col) VALUES (23) RETURNING ".$sqlPart, $sql->toSql());
     }
+
+
+    /**
+     * ON CONFLICT
+     */
+    public function testInsertOnConflict()
+    {
+        // без условия
+        $sql = (new SqlBuilder())->from($this->table)->insert()
+            ->values(['col' => 23])
+            ->onConflictDoNothing();
+        $this->assertEquals("INSERT INTO {$this->table} (col) VALUES (23) ON CONFLICT DO NOTHING", $sql->toSql());
+
+        // с условием
+        $sql = (new SqlBuilder())->from($this->table)->insert()
+            ->values(['col' => 23])
+            ->onConflictDoNothing($conflictObject = 'id, name')
+            ->returning($sqlPart = 'any sql part');
+        $this->assertEquals("INSERT INTO {$this->table} (col) VALUES (23) ON CONFLICT ({$conflictObject}) DO NOTHING RETURNING ".$sqlPart, $sql->toSql());
+    }
 }
