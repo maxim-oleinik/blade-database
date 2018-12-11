@@ -71,7 +71,7 @@ class TestStubDbConnection implements DbConnectionInterface
     /**
      * {@inheritdoc}
      */
-    public function rollBack()
+    public function rollback()
     {
         $this->log[] = 'rollback';
     }

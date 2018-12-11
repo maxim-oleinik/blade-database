@@ -46,7 +46,7 @@ interface DbConnectionInterface
      *
      * @return void
      */
-    public function rollBack();
+    public function rollback();
 
 
     /**

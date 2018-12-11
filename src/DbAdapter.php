@@ -91,7 +91,7 @@ class DbAdapter
             throw new \RuntimeException(__METHOD__. ": No Active transaction, counter: " . $this->transactionCounter);
 
         } elseif ($force || !$this->transactionCounter) {
-            $this->getConnection()->rollBack();
+            $this->getConnection()->rollback();
             $this->transactionCounter = 0;
 
         } else {
