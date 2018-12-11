@@ -97,7 +97,9 @@ SqlBuilder
         ->addJoin("LEFT JOIN authors AS a ON (a.id=t.author_id)")
 
         ->andWhere("t.id = %d", 123)
-        ->andWhereEquals("t.id", 123)
+        ->andWhereEquals("t.id", 123)    // t.id='123'
+        ->andWhereNotEquals("t.id", 123) // t.id<>'123'
+        ->andWhereEquals("t.id", null)   // t.id IS NULL
         ->andWhere("a.name > '%s'", 'some text') // sprintf escaped values
         ->andWhereIn("t.code", [1,2,3])
         ->andWhereNotIn("t.code", [4,5])
