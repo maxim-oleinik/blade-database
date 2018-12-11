@@ -114,6 +114,13 @@ SqlBuilder
     echo $sql;
 ```
 
+**Подстановка Алиасов в колонки**
+```
+    $sql->setFromAlias('t')
+        ->andWhere($sql->col('id') . '=1')  // "t.id=1"
+        ->select($sql->col(['id', 'name'])) // "t.id, t.name"
+```
+
 **Join**
 ```
     // Raw SQL join
