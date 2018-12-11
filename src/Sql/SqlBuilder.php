@@ -260,12 +260,16 @@ class SqlBuilder
     /**
      * JOIN - raw SQL
      *
-     * @param  string $cond - например: "LEFT JOIN some_table AS t ON (t.id=o.id)"
+     * @param string $cond - например: "LEFT JOIN some_table AS t ON (t.id=o.id)"
+     * @param bool   $once - НЕ добавлять JOIN, если уже такой зарегистрирован
      * @return $this
      */
-    public function addJoin($cond)
+    public function addJoin($cond, $once = false): self
     {
-        $this->join[] = $cond;
+        $cond = (string)$cond;
+        if (!$once || !in_array($cond, $this->join)) {
+            $this->join[] = $cond;
+        }
         return $this;
     }
 
@@ -275,13 +279,17 @@ class SqlBuilder
      * @param string     $type      - "LEFT JOIN", "INNER JOIN"
      * @param SqlBuilder $sql
      * @param string     $condition - "ON (a.id=t.id)"
+     * @param bool       $once
      * @return $this
      */
-    public function join($type, SqlBuilder $sql, $condition)
+    public function join($type, SqlBuilder $sql, $condition, $once = false)
     {
-        $this->addJoin(trim($type . ' ' . $sql->buildFrom() . ' ' . $condition));
-        if ($where = $sql->buildWhere(true)) {
-            $this->andWhere($where);
+        $c = count($this->join);
+        $this->addJoin(trim($type . ' ' . $sql->buildFrom() . ' ' . $condition), $once);
+        if (count($this->join) !== $c) { // если join был добавлен
+            if ($where = $sql->buildWhere(true)) {
+                $this->andWhere($where);
+            }
         }
         return $this;
     }
@@ -289,31 +297,34 @@ class SqlBuilder
     /**
      * @param SqlBuilder $sql
      * @param string     $condition
+     * @param bool       $once
      * @return $this
      */
-    public function innerJoin(SqlBuilder $sql, $condition = null)
+    public function innerJoin(SqlBuilder $sql, $condition = null, $once = false)
     {
-        return $this->join('INNER JOIN', $sql, $condition);
+        return $this->join('INNER JOIN', $sql, $condition, $once);
     }
 
     /**
      * @param SqlBuilder $sql
      * @param string     $condition
+     * @param bool       $once
      * @return $this
      */
-    public function leftJoin(SqlBuilder $sql, $condition = null)
+    public function leftJoin(SqlBuilder $sql, $condition = null, $once = false)
     {
-        return $this->join('LEFT JOIN', $sql, $condition);
+        return $this->join('LEFT JOIN', $sql, $condition, $once);
     }
 
     /**
      * @param SqlBuilder $sql
      * @param string     $condition
+     * @param bool       $once
      * @return $this
      */
-    public function rightJoin(SqlBuilder $sql, $condition = null)
+    public function rightJoin(SqlBuilder $sql, $condition = null, $once = false)
     {
-        return $this->join('RIGHT JOIN', $sql, $condition);
+        return $this->join('RIGHT JOIN', $sql, $condition, $once);
     }
 
 

@@ -19,7 +19,11 @@ class JoinTest extends \PHPUnit_Framework_TestCase
             ->select('t2.*')
             ->addJoin($t2 = 'INNER JOIN table2 AS t2 USING (col)')
             ->addJoin($t3 = 'LEFT JOIN table3 AS t3 USING (col)');
-        $this->assertEquals("SELECT t2.*\nFROM {$this->table} AS t\n{$t2}\n{$t3}", $sql->toSql());
+        $this->assertEquals("SELECT t2.*\nFROM {$this->table} AS t\n{$t2}\n{$t3}", $sqlStr = $sql->toSql());
+
+        // Join once
+        $sql->addJoin($t2, true);
+        $this->assertEquals($sqlStr, $sql->toSql());
     }
 
     /**
@@ -43,7 +47,13 @@ class JoinTest extends \PHPUnit_Framework_TestCase
             "INNER JOIN table2 AS t2 ON t2.id=t1.id\n" .
             "LEFT JOIN table2 AS t2 ON t2.col=t1.col\n" .
             "RIGHT JOIN table2 AS t2\n".
-            "WHERE t2.col=123 AND t2.col=123 AND t2.col=123 AND t1.col=55", $sql->toSql());
+            "WHERE t2.col=123 AND t2.col=123 AND t2.col=123 AND t1.col=55", $sqlStr = $sql->toSql());
+
+        // join once
+        $sql->innerJoin($sql2, 'ON t2.id=t1.id', true)
+            ->leftJoin($sql2, 'ON t2.col=t1.col', true)
+            ->rightJoin($sql2, null, true);
+        $this->assertEquals($sqlStr, $sql->toSql());
     }
 
 
