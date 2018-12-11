@@ -7,6 +7,7 @@ class SqlBuilder
 {
     const WHERE_AND = 'AND';
     const WHERE_OR  = 'OR';
+    const WHERE     = 'WHERE';
 
     /**
      * @var callable
@@ -32,6 +33,7 @@ class SqlBuilder
     private $onConflictObject;
     private $onConflictAction;
     private $values = [];
+    private $onBuildHandlers = [];
 
 
     /**
@@ -733,19 +735,48 @@ class SqlBuilder
         return $from;
     }
 
+
+    /**
+     * ON BuildWhere - добавить обработчик
+     *
+     * @param  callable $handler
+     * @return $this
+     */
+    public function onBuildWhere(callable $handler): self
+    {
+        $this->onBuildHandlers[self::WHERE][] = $handler;
+        return $this;
+    }
+
+
+    /**
+     * Build WHERE
+     *
+     * @param  bool $raw - собрать БЕЗ ключевого слова WHERE
+     * @return string|null
+     */
     public function buildWhere($raw = false)
     {
+        $sql = $this->_applyHandlers(self::WHERE);
+        $whereConditions = $sql->where;
+
         $where = null;
-        if ($this->where) {
-            $where = implode(' ', $this->where);
+        if ($whereConditions) {
             if (!$raw) {
-                $where = "\nWHERE " . $where;
+                array_unshift($whereConditions, "\n" . self::WHERE);
             }
+            $where = implode(' ', $whereConditions);
         }
 
         return $where;
     }
 
+
+    /**
+     * Build JOIN
+     *
+     * @return string|null
+     */
     public function buildJoins()
     {
         $join = null;
@@ -772,6 +803,28 @@ class SqlBuilder
             $val = sprintf("'%s'", self::escape($val));
         }
         return $val;
+    }
+
+
+    /**
+     * Применить зарегистрированный обработчик для сборки указанной части SQL-запроса
+     *
+     * Возвращает клонированный модифицированный SqlBuilder
+     * Клонирует для того, чтобы вызов обработчика не трогал текущий запрос и применялся только для сборки
+     *
+     * @param  string $target
+     * @return SqlBuilder
+     */
+    private function _applyHandlers($target): SqlBuilder
+    {
+        $sql = $this;
+        if (!empty($this->onBuildHandlers[$target])) {
+            $sql = clone $this;
+            foreach ($this->onBuildHandlers[$target] as $handler) {
+                $handler($sql);
+            }
+        }
+        return $sql;
     }
 
 
