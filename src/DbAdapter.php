@@ -20,9 +20,9 @@ class DbAdapter
     private $transactionCounter = 0;
 
     /**
-     * DbAdapter constructor.
+     * Constructor
      *
-     * @param \Blade\Database\DbConnectionInterface $connection
+     * @param DbConnectionInterface $connection
      */
     public function __construct(DbConnectionInterface $connection)
     {
@@ -31,9 +31,9 @@ class DbAdapter
 
 
     /**
-     * @return \Blade\Database\DbConnectionInterface
+     * @return DbConnectionInterface
      */
-    public function getConnection()
+    public function getConnection(): DbConnectionInterface
     {
         return $this->connection;
     }
@@ -47,7 +47,7 @@ class DbAdapter
      *
      * @return int - Nested transaction level
      */
-    public function beginTransaction()
+    public function beginTransaction(): int
     {
         if (!$this->transactionCounter) {
             $this->getConnection()->beginTransaction();
@@ -63,13 +63,14 @@ class DbAdapter
      *
      * @return int - Nested transaction level
      */
-    public function commit()
+    public function commit(): int
     {
         $this->transactionCounter--;
         if ($this->transactionCounter < 0) {
-            throw new \RuntimeException(__METHOD__. ": No Active transaction, counter: " . $this->transactionCounter);
+            throw new \RuntimeException(__METHOD__. ': No Active transaction, counter: ' . $this->transactionCounter);
+        }
 
-        } elseif (!$this->transactionCounter) {
+        if (!$this->transactionCounter) {
             $this->getConnection()->commit();
 
         } else {
@@ -84,13 +85,14 @@ class DbAdapter
      * @param  bool $force - Полностью откатить всю транкзакцию со всеми уровнями вложенности
      * @return int - Nested transaction level
      */
-    public function rollBack($force = false)
+    public function rollBack($force = false): int
     {
         $this->transactionCounter--;
         if ($this->transactionCounter < 0) {
-            throw new \RuntimeException(__METHOD__. ": No Active transaction, counter: " . $this->transactionCounter);
+            throw new \RuntimeException(__METHOD__. ': No Active transaction, counter: ' . $this->transactionCounter);
+        }
 
-        } elseif ($force || !$this->transactionCounter) {
+        if ($force || !$this->transactionCounter) {
             $this->getConnection()->rollback();
             $this->transactionCounter = 0;
 
@@ -103,7 +105,7 @@ class DbAdapter
     /**
      * @return string
      */
-    private function _getSavePointName()
+    private function _getSavePointName(): string
     {
         return 'sp' . $this->transactionCounter;
     }
@@ -219,9 +221,7 @@ class DbAdapter
     public function selectRow($query, $bindings = []): array
     {
         if ($rows = $this->selectAll($query, $bindings)) {
-            foreach ($rows as $row) {
-                return $row;
-            }
+            return current($rows);
         }
 
         return [];
@@ -250,7 +250,8 @@ class DbAdapter
     private function _checkCallbackArguments($row)
     {
         if (!is_array($row)) {
-            throw new \InvalidArgumentException(__METHOD__ . ': Expected ' . get_class($this->getConnection()) . '->each() returns row as ARRAY');
+            throw new \InvalidArgumentException(__METHOD__ . ': Expected '
+                . get_class($this->getConnection()) . '->each() returns row as ARRAY');
         }
     }
 
