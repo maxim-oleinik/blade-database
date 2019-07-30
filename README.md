@@ -57,6 +57,7 @@ DbAdapter
     $db = new DbAdapter(new MyDbConnection);
 
         ->execute($query, array $bindings = []): int          - Кол-во затронутых строк
+        ->each($query, array $bindings = []): Generator       - Построчная выборка
         ->selectAll($query, array $bindings = []): array      - Выбрать всю выборку в один массив
         ->selectRow($query, array $bindings = []): array      - Выбрать одну строку
         ->selectColumn($query, array $bindings = []): array   - Выбрать значение 1 колонки в массив

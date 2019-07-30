@@ -9,6 +9,29 @@ use Blade\Database\Connection\TestStubDbConnection;
 class SelectTest extends \PHPUnit\Framework\TestCase
 {
     /**
+     * Each Proxy
+     */
+    public function testEachProxy()
+    {
+        $con = new TestStubDbConnection();
+        $db = new DbAdapter($con);
+
+        $con->addReturnResultSet($rows = [
+            ['id' => 1, 'name' => 'A'],
+            ['id' => 2, 'name' => 'B'],
+        ]);
+
+        $result = [];
+        foreach ($db->each($sql = 'select *') as $row) {
+            $result[] = $row;
+        }
+
+        $this->assertEquals($rows, $result);
+        $this->assertEquals([$sql], $con->log);
+    }
+
+
+    /**
      * Select List
      */
     public function testSelectList()

@@ -132,7 +132,7 @@ class DbAdapter
     }
 
 
-    // Execute
+    // Proxy
     // ------------------------------------------------------------------------
 
     /**
@@ -142,9 +142,22 @@ class DbAdapter
      * @param array  $bindings
      * @return bool|int
      */
-    public function execute($query, $bindings = [])
+    public function execute($query, array $bindings = [])
     {
         return $this->getConnection()->execute($query, $bindings);
+    }
+
+
+    /**
+     * Выполнить SQL и для каждой строки выборки выкинуть yield
+     *
+     * @param string $query
+     * @param array  $bindings
+     * @return \Generator
+     */
+    public function each($query, array $bindings = []): \Generator
+    {
+        return $this->getConnection()->each($query, $bindings);
     }
 
 

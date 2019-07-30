@@ -16,8 +16,7 @@ interface DbConnectionInterface
     public function execute($sql, array $bindings = []): int;
 
     /**
-     * Выполнить SQL и для каждой строки выборки вызвать указанную callback-функцию
-     *     callback принимает строку ТОЛЬКО как МАССИВ
+     * Выполнить SQL и для каждой строки выборки выкинуть yield
      * Реализовать собственную обработку ошибок выполнения запроса
      *
      * @param string $sql
