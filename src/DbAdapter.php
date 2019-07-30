@@ -160,10 +160,10 @@ class DbAdapter
     {
         $result = [];
 
-        $this->getConnection()->each((string)$query, function ($row) use (&$result) {
+        foreach ($this->getConnection()->each((string)$query) as $row) {
             $this->_checkCallbackArguments($row);
             $result[] = $row;
-        }, $bindings);
+        }
 
         return $result;
     }
@@ -179,10 +179,10 @@ class DbAdapter
     {
         $result = [];
 
-        $this->getConnection()->each((string)$query, function ($row) use (&$result) {
+        foreach ($this->getConnection()->each((string)$query) as $row) {
             $this->_checkCallbackArguments($row);
             $result[] = current($row);
-        }, $bindings);
+        }
 
         return $result;
     }
@@ -198,13 +198,13 @@ class DbAdapter
     {
         $result = [];
 
-        $this->getConnection()->each((string)$query, function ($row) use (&$result) {
+        foreach ($this->getConnection()->each((string)$query) as $row) {
             $this->_checkCallbackArguments($row);
-            if (count($row) != 2) {
-                throw new \RuntimeException(__METHOD__ . ": Expected 2 columns, got " . var_export($row, true));
+            if (count($row) !== 2) {
+                throw new \RuntimeException(__METHOD__ . ': Expected 2 columns, got ' . var_export($row, true));
             }
             $result[current($row)] = next($row);
-        }, $bindings);
+        }
 
         return $result;
     }
@@ -250,7 +250,7 @@ class DbAdapter
     private function _checkCallbackArguments($row)
     {
         if (!is_array($row)) {
-            throw new \InvalidArgumentException(__METHOD__ . ": Expected " . get_class($this->getConnection()) . "->each() runs callback with row as ARRAY");
+            throw new \InvalidArgumentException(__METHOD__ . ': Expected ' . get_class($this->getConnection()) . '->each() returns row as ARRAY');
         }
     }
 

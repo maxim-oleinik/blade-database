@@ -91,13 +91,13 @@ class MysqlConnection implements DbConnectionInterface
     /**
      * {@inheritdoc}
      */
-    public function each($sql, callable $callback, array $bindings = [])
+    public function each($sql, array $bindings = []): \Generator
     {
         $result = $this->_query($sql, $bindings);
 
         if ($result->num_rows) {
             foreach ($result as $row) {
-                $callback($row);
+                yield $row;
             }
         }
 

@@ -40,13 +40,13 @@ class TestStubDbConnection implements DbConnectionInterface
     /**
      * {@inheritdoc}
      */
-    public function each($sql, callable $callback, array $bindings = [])
+    public function each($sql, array $bindings = []): \Generator
     {
         $this->log[] = (string)$sql;
         $this->queryCount++;
         if (isset($this->returnValues[$this->queryCount])) {
             foreach ($this->returnValues[$this->queryCount] as $row) {
-                $callback((array)$row);
+                yield (array)$row;
             }
         }
     }

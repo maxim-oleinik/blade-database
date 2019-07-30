@@ -76,12 +76,12 @@ class PostgresConnection implements DbConnectionInterface
     /**
      * {@inheritdoc}
      */
-    public function each($sql, callable $callback, array $bindings = [])
+    public function each($sql, array $bindings = []): \Generator
     {
         $result = $this->_query($sql, $bindings);
 
         while ($row = pg_fetch_assoc($result)) {
-            $callback($row);
+            yield $row;
         }
 
         pg_free_result($result);

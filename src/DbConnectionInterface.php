@@ -20,11 +20,11 @@ interface DbConnectionInterface
      *     callback принимает строку ТОЛЬКО как МАССИВ
      * Реализовать собственную обработку ошибок выполнения запроса
      *
-     * @param string   $sql
-     * @param callable $callback
-     * @param array    $bindings
+     * @param string $sql
+     * @param array  $bindings
+     * @return \Generator
      */
-    public function each($sql, callable $callback, array $bindings = []);
+    public function each($sql, array $bindings = []): \Generator;
 
 
     /**

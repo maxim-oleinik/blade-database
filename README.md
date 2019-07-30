@@ -18,7 +18,7 @@ Install
         class MyDbConnection implements \Blade\Database\DbConnectionInterface
         {
             ->execute($sql, $bindings = []): int;
-            ->each($sql, callable $callback, $bindings = []);
+            ->each($sql, $bindings = []): Generator;
             ->escape($value): string
             ->beginTransaction();
             ->commit();

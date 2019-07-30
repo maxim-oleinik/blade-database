@@ -23,14 +23,14 @@ class PdoConnection extends \PDO implements DbConnectionInterface
     /**
      * {@inheritdoc}
      */
-    public function each($sql, callable $callback, array $bindings = [])
+    public function each($sql, array $bindings = []): \Generator
     {
         if (!$statement = $this->query($sql)) {
             throw new \RuntimeException(var_export($this->errorInfo(), true) . PHP_EOL . $sql);
         }
 
         foreach ($statement as $row) {
-            $callback($row);
+            yield $row;
         }
     }
 
