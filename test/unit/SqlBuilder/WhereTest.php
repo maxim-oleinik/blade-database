@@ -5,7 +5,7 @@ use Blade\Database\Sql\SqlBuilder;
 /**
  * @see \Blade\Database\Sql\SqlBuilder
  */
-class WhereTest extends \PHPUnit_Framework_TestCase
+class WhereTest extends \PHPUnit\Framework\TestCase
 {
     use TestSqlTrait;
 
@@ -125,7 +125,8 @@ class WhereTest extends \PHPUnit_Framework_TestCase
     public function testFirstOrException()
     {
         $sql = $this->sql();
-        $this->setExpectedException('InvalidArgumentException', 'Invalid first OR condition');
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid first OR condition');
         $sql->orWhere('a=1');
     }
 }

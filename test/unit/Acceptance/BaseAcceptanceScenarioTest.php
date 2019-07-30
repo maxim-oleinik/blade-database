@@ -4,7 +4,7 @@ use Blade\Database\DbAdapter;
 use Blade\Database\DbConnectionInterface;
 use Blade\Database\Sql\SqlBuilder;
 
-abstract class BaseAcceptanceScenarioTest extends \PHPUnit_Framework_TestCase
+abstract class BaseAcceptanceScenarioTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var bool - Allow run CREATE TABLE in transaction

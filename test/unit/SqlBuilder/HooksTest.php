@@ -5,7 +5,7 @@ use Blade\Database\Sql\SqlBuilder;
 /**
  * @see \Blade\Database\Sql\SqlBuilder
  */
-class HooksTest extends \PHPUnit_Framework_TestCase
+class HooksTest extends \PHPUnit\Framework\TestCase
 {
     use TestSqlTrait;
 

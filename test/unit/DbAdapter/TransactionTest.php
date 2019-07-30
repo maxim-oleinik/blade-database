@@ -6,7 +6,7 @@ use Blade\Database\Connection\TestStubDbConnection;
 /**
  * @see \Blade\Database\DbAdapter
  */
-class TransactionTest extends \PHPUnit_Framework_TestCase
+class TransactionTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * Transaction Commit

@@ -5,7 +5,7 @@ use Blade\Database\Sql\SqlBuilder;
 /**
  * @see \Blade\Database\Sql\SqlBuilder
  */
-class UpdateTest extends \PHPUnit_Framework_TestCase
+class UpdateTest extends \PHPUnit\Framework\TestCase
 {
     use TestSqlTrait;
 

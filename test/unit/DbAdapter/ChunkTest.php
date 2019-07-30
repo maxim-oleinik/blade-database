@@ -7,7 +7,7 @@ use Blade\Database\Connection\TestStubDbConnection;
 /**
  * @see \Blade\Database\DbAdapter
  */
-class ChunkTest extends \PHPUnit_Framework_TestCase
+class ChunkTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * Select List

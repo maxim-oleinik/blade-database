@@ -3,7 +3,7 @@
 /**
  * @see \Blade\Database\Sql\SqlBuilder
  */
-class SelectTest extends \PHPUnit_Framework_TestCase
+class SelectTest extends \PHPUnit\Framework\TestCase
 {
     use TestSqlTrait;
 

@@ -6,7 +6,7 @@ use Blade\Database\Connection\TestStubDbConnection;
 /**
  * @see \Blade\Database\DbAdapter
  */
-class SelectTest extends \PHPUnit_Framework_TestCase
+class SelectTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * Select List

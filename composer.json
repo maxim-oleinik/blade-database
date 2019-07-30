@@ -15,7 +15,7 @@
     "ext-pdo": "*",
     "ext-pgsql": "*",
     "ext-mysqli": "*",
-    "phpunit/phpunit": "5.*"
+    "phpunit/phpunit": "6.*"
   },
 
   "autoload": {
