@@ -83,8 +83,7 @@ class MysqlConnection implements DbConnectionInterface
     public function execute($sql, array $bindings = []): int
     {
         $this->_query($sql, $bindings, false);
-        $c = (int) $this->connection->affected_rows;
-        return $c;
+        return (int) $this->connection->affected_rows;
     }
 
 
@@ -126,10 +125,10 @@ class MysqlConnection implements DbConnectionInterface
     {
         $c = $this->getConnection();
         if ($bindings) {
-            throw new \RuntimeException(__METHOD__.": NOT Implemented");
-        } else {
-            $result = $c->query($sql, $useResult ? MYSQLI_USE_RESULT :  MYSQLI_STORE_RESULT);
+            throw new \RuntimeException(__METHOD__. ': NOT Implemented');
         }
+
+        $result = $c->query($sql, $useResult ? MYSQLI_USE_RESULT :  MYSQLI_STORE_RESULT);
 
         if (!$result) {
             throw new \RuntimeException('Query ERROR: ' . $c->error . PHP_EOL . 'Query: ' . $sql);

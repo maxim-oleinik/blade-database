@@ -29,7 +29,7 @@ class PostgresConnection implements DbConnectionInterface
     {
         if (!$this->connection) {
             if (!$this->connection = pg_connect($this->connectionString, $this->connectType)) {
-                throw new \RuntimeException(__METHOD__.": Connection failed: " . $this->connectionString);
+                throw new \RuntimeException(__METHOD__. ': Connection failed: ' . $this->connectionString);
             }
         }
         return $this->connection;

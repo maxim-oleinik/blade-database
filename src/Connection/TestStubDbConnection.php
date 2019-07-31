@@ -20,7 +20,7 @@ class TestStubDbConnection implements DbConnectionInterface
         if ($rows) {
             $row = current($rows);
             if (!is_array($row) && !$row instanceof \StdClass) {
-                throw new \InvalidArgumentException(__METHOD__.": Expected nested array: [[row1], [row2]]");
+                throw new \InvalidArgumentException(__METHOD__. ': Expected nested array: [[row1], [row2]]');
             }
         }
         $this->returnValues[] = $rows;
